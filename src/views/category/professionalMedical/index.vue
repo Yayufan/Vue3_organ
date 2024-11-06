@@ -18,9 +18,9 @@
       batchDeleteCategory, 批量刪除的回調函數
       
       -->
-      <CustomCategory :categoryTable="categoryTable" :saveOrUpdateCategory="saveOrUpdateProfessionalMedicalCategory"
+      <CategoryTable :categoryTable="categoryTable" :saveOrUpdateCategory="saveOrUpdateProfessionalMedicalCategory"
         :deleteCategory="deleteCategory" :batchDeleteCategory="batchDeleteCategory" :group="GROUP">
-      </CustomCategory>
+      </CategoryTable>
 
     </el-card>
 
@@ -31,7 +31,7 @@
 <script setup lang='ts'>
 
 import { ref, reactive } from 'vue'
-import CustomCategory from '@/components/CustomCategory/index.vue'
+import CategoryTable from '@/components/CategoryTable/index.vue'
 import { saveArticleCategoryApi, getAllArticleCategoryByGroupApi, deleteArticleCategoryApi, batchDeleteArticleCategoryApi } from '@/api/articleCategory'
 
 const GROUP = "professionalMedical"

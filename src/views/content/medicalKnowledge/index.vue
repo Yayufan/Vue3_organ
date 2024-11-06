@@ -3,9 +3,9 @@
   <section class="medical-knowledge-section">
     <el-card class="medical-knowledge-card">
       <h1>醫學新知文章管理</h1>
-      <CustomArticleTable :table="medicalKnowledgeList" :getApi="getMedicalKnowledge" :addApi="addMedicalKnowledge"
+      <ArticleTable :table="medicalKnowledgeList" :getApi="getMedicalKnowledge" :addApi="addMedicalKnowledge"
         :deleteApi="deleteMedicalKnowledge" :batchDeleteApi="batchDeleteMedicalKnowledge" :group="GROUP">
-      </CustomArticleTable>
+      </ArticleTable>
     </el-card>
 
   </section>
@@ -14,7 +14,7 @@
 <script setup lang='ts'>
 
 import { ref, reactive } from 'vue'
-import CustomArticleTable from '@/components/CustomArticleTable/index.vue'
+import ArticleTable from '@/components/ArticleTable/index.vue'
 import { getAllArticleByGroupByPaginationApi, addArticleApi, deleteArticleApi, batchDeleteArticleApi } from '@/api/article'
 
 //獲取路由

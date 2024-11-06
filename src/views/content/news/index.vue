@@ -4,9 +4,9 @@
   <section class="news-section">
     <el-card class="news-card">
       <h1>最新消息管理</h1>
-      <CustomNewsTable :table="newsList" :getApi="getNews" :addApi="addNews" :deleteApi="deleteNews"
+      <ArticleTableNoImg :table="newsList" :getApi="getNews" :addApi="addNews" :deleteApi="deleteNews"
         :batchDeleteApi="batchDeleteNews" :group="GROUP">
-      </CustomNewsTable>
+      </ArticleTableNoImg>
     </el-card>
 
   </section>
@@ -16,7 +16,7 @@
 <script setup lang='ts'>
 
 import { ref, reactive } from 'vue'
-import CustomNewsTable from '@/components/CustomNewsTable/index.vue'
+import ArticleTableNoImg from '@/components/ArticleTableNoImg/index.vue'
 import { getAllArticleByGroupByPaginationApi, addArticleApi, deleteArticleApi, batchDeleteArticleApi } from '@/api/article'
 
 //獲取路由

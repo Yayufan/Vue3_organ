@@ -6,11 +6,11 @@
       <h1>手術衛教文章管理</h1>
 
 
-      <CustomCategoryArticleTable :table="educationSurgeryTable" :categoryTable="categoryTable"
-        :addApi="addEducationSurgery" :deleteApi="deleteEducationSurgery" :getApi="getEducationSurgery"
-        :batchDeleteApi="batchDeleteEducationSurgery" :group="GROUP">
+      <CategoryArticleTable :table="educationSurgeryTable" :categoryTable="categoryTable" :addApi="addEducationSurgery"
+        :deleteApi="deleteEducationSurgery" :getApi="getEducationSurgery" :batchDeleteApi="batchDeleteEducationSurgery"
+        :group="GROUP">
+      </CategoryArticleTable>
 
-      </CustomCategoryArticleTable>
     </el-card>
 
   </section>
@@ -19,7 +19,7 @@
 <script setup lang='ts'>
 
 import { ref, reactive } from 'vue'
-import CustomCategoryArticleTable from '@/components/CustomCategoryArticleTable/index.vue'
+import CategoryArticleTable from '@/components/CategoryArticleTable/index.vue'
 import { getAllArticleCategoryByGroupApi } from '@/api/articleCategory'
 import { getAllArticleByGroupByPaginationApi, addArticleApi, deleteArticleApi, batchDeleteArticleApi } from '@/api/article'
 

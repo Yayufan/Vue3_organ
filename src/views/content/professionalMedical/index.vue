@@ -5,11 +5,11 @@
       <h1>專業醫療文章管理</h1>
 
 
-      <CustomCategoryArticleTable :table="professionalMedicalTable" :categoryTable="categoryTable"
+      <CategoryArticleTable :table="professionalMedicalTable" :categoryTable="categoryTable"
         :addApi="addProfessionalMedical" :deleteApi="deleteProfessionalMedical" :getApi="getProfessionalMedical"
         :batchDeleteApi="batchDeleteProfessionalMedical" :group="GROUP">
 
-      </CustomCategoryArticleTable>
+      </CategoryArticleTable>
     </el-card>
 
   </section>
@@ -18,7 +18,7 @@
 <script setup lang='ts'>
 
 import { ref, reactive } from 'vue'
-import CustomCategoryArticleTable from '@/components/CustomCategoryArticleTable/index.vue'
+import CategoryArticleTable from '@/components/CategoryArticleTable/index.vue'
 import { getAllArticleCategoryByGroupApi } from '@/api/articleCategory'
 import { getAllArticleByGroupByPaginationApi, addArticleApi, deleteArticleApi, batchDeleteArticleApi } from '@/api/article'
 
