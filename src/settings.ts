@@ -7,7 +7,7 @@ const { pkg } = __APP_INFO__;
 
 const defaultSettings: AppSettings = {
   // title: pkg.name,
-  title: "新川醫療",
+  title: "器捐協會-網站後台",
   version: pkg.version,
   showSettings: true,
   tagsView: false,

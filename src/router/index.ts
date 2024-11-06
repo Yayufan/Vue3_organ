@@ -59,36 +59,38 @@ export const constantRoutes: RouteRecordRaw[] = [
 
     ],
   },
-  //系統設定，沒子目錄
-  {
-    path: "/setting",
-    component: Layout,
-    name: "Setting", // 用于 keep-alive, 必须与SFC自动推导或者显示声明的组件name一致
-    // https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
-    meta: {
-      title: "設定頁面",
-      icon: "el-icon-Setting",
-      //affix: true,
-      keepAlive: true,
-      alwaysShow: false,
-    },
-    children: [
-      {
-        path: "",
-        component: () => import("@/views/setting/index.vue"),
-        name: "SettingPage",
-        meta: {
-          title: "系統設定",
-          icon: "el-icon-Setting",
-          hidden: false,
-          roles: ["ADMIN"],
-          keepAlive: true,
+  //系統設定，沒子目錄，器捐協會沒有設定
 
-        }
-      }
-    ]
-  },
+  // {
+  //   path: "/setting",
+  //   component: Layout,
+  //   name: "Setting", // 用于 keep-alive, 必须与SFC自动推导或者显示声明的组件name一致
+  //   // https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
+  //   meta: {
+  //     title: "設定頁面",
+  //     icon: "el-icon-Setting",
+  //     //affix: true,
+  //     keepAlive: true,
+  //     alwaysShow: false,
+  //   },
+  //   children: [
+  //     {
+  //       path: "",
+  //       component: () => import("@/views/setting/index.vue"),
+  //       name: "SettingPage",
+  //       meta: {
+  //         title: "系統設定",
+  //         icon: "el-icon-Setting",
+  //         hidden: false,
+  //         roles: ["ADMIN"],
+  //         keepAlive: true,
 
+  //       }
+  //     }
+  //   ]
+  // },
+
+  //這個預計當作器捐線上簽屬的審核
   {
     path: "/member",
     component: Layout,
@@ -131,54 +133,56 @@ export const constantRoutes: RouteRecordRaw[] = [
 
   },
 
-  {
-    path: "/category",
-    component: Layout,
-    redirect: "/category/professional-medical",
-    name: "Category",
-    meta: {
-      title: "類別管理",
-      icon: "system",
-      hidden: false,
-      roles: ["ADMIN"],
-    },
-    children: [
-      /**專業醫療類別路由 */
-      {
-        path: "professional-medical",
-        component: () => import("@/views/category/professionalMedical/index.vue"),
-        name: "Category-ProfessionalMedical",
-        meta: {
-          title: "專業醫療",
-          icon: "el-icon-DataAnalysis",
-          hidden: false,
-          roles: ["ADMIN"],
-          keepAlive: true,
-        },
-      },
-      /**衛教手術路由 */
-      {
-        path: "education_surgery",
-        component: () => import("@/views/category/educationSurgery/index.vue"),
-        name: "Category-EducationSurgery",
-        meta: {
-          title: "手術衛教",
-          icon: "el-icon-List",
-          hidden: false,
-          roles: ["ADMIN"],
-          keepAlive: true,
-        },
-      },
-    ]
-  },
+
+  //器捐協會沒有類別管理
+  // {
+  //   path: "/category",
+  //   component: Layout,
+  //   redirect: "/category/professional-medical",
+  //   name: "Category",
+  //   meta: {
+  //     title: "類別管理",
+  //     icon: "system",
+  //     hidden: false,
+  //     roles: ["ADMIN"],
+  //   },
+  //   children: [
+  //     /**專業醫療類別路由 */
+  //     {
+  //       path: "professional-medical",
+  //       component: () => import("@/views/category/professionalMedical/index.vue"),
+  //       name: "Category-ProfessionalMedical",
+  //       meta: {
+  //         title: "專業醫療",
+  //         icon: "el-icon-DataAnalysis",
+  //         hidden: false,
+  //         roles: ["ADMIN"],
+  //         keepAlive: true,
+  //       },
+  //     },
+  //     /**衛教手術路由 */
+  //     {
+  //       path: "education_surgery",
+  //       component: () => import("@/views/category/educationSurgery/index.vue"),
+  //       name: "Category-EducationSurgery",
+  //       meta: {
+  //         title: "手術衛教",
+  //         icon: "el-icon-List",
+  //         hidden: false,
+  //         roles: ["ADMIN"],
+  //         keepAlive: true,
+  //       },
+  //     },
+  //   ]
+  // },
 
   {
-    path: "/content",
+    path: "/news-content",
     component: Layout,
-    redirect: "/content/news",
-    name: "Content",
+    redirect: "/news-content/news",
+    name: "NewsContent",
     meta: {
-      title: "內容管理",
+      title: "信息看板-內容管理",
       icon: "el-icon-EditPen",
       hidden: false,
       roles: ["ADMIN"],
@@ -188,7 +192,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       {
         path: "news",
         component: () => import("@/views/content/news/index.vue"),
-        name: "Content-News",
+        name: "NewsContentNews",
         meta: {
           title: "最新消息",
           icon: "menu",
@@ -200,7 +204,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       {
         path: "news/:id",
         component: () => import("@/views/content/news/NewsItem.vue"),
-        name: "Content-NewsItem",
+        name: "NewsContentNewsItem",
         props: true,
         meta: {
           title: "最新消息編輯",
@@ -210,85 +214,33 @@ export const constantRoutes: RouteRecordRaw[] = [
           keepAlive: true,
         },
       },
-      /**醫學新知路由,以及其編輯路由 */
-      {
-        path: "medical-knowledge",
-        component: () => import("@/views/content/medicalKnowledge/index.vue"),
-        name: "Content-MedicalKnowledge",
-        meta: {
-          title: "醫學新知",
-          icon: "dict",
-          hidden: false,
-          roles: ["ADMIN"],
-          keepAlive: true,
-        },
-      },
-      {
-        path: "medical-knowledge/:id",
-        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
-        name: "Content-MedicalKnowledgeItem",
-        props: true,
-        meta: {
-          title: "醫學新知文章編輯",
-          icon: "dict",
-          hidden: true,
-          roles: ["ADMIN"],
-          keepAlive: true,
-        },
-      },
-      /**專業醫療文章路由,以及其編輯路由 */
-      {
-        path: "professional-medical",
-        component: () => import("@/views/content/professionalMedical/index.vue"),
-        name: "Content-ProfessionalMedical",
-        meta: {
-          title: "專業醫療",
-          icon: "el-icon-DataAnalysis",
-          hidden: false,
-          roles: ["ADMIN"],
-          keepAlive: true,
-        },
-      },
-      {
-        path: "professional-medical/:id",
-        component: () => import("@/views/content/professionalMedical/ProfessionalMedicalItem.vue"),
-        name: "Content-ProfessionalMedicalItem",
-        props: true,
-        meta: {
-          title: "專業醫療文章編輯",
-          icon: "dict",
-          hidden: true,
-          roles: ["ADMIN"],
-          keepAlive: true,
-        },
-      },
-      /** 手術衛教文章路由，以及其編輯路由 */
-      {
-        path: "education-surgery",
-        component: () => import("@/views/content/educationSurgery/index.vue"),
-        name: "Content-EducationSurgery",
-        meta: {
-          title: "手術衛教",
-          icon: "el-icon-DataAnalysis",
-          hidden: false,
-          roles: ["ADMIN"],
-          keepAlive: true,
-        },
-      },
-      {
-        path: "education-surgery/:id",
-        component: () => import("@/views/content/educationSurgery/EducationSurgeryItem.vue"),
-        name: "Content-EducationSurgeryItem",
-        props: true,
-        meta: {
-          title: "手術衛教文章編輯",
-          icon: "dict",
-          hidden: true,
-          roles: ["ADMIN"],
-          keepAlive: true,
-        },
-      },
 
+      /**活動花絮路由,以及其編輯路由 */
+      {
+        path: "event-highlights",
+        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        name: "NewsContentEventHighlights",
+        meta: {
+          title: "活動花絮",
+          icon: "menu",
+          hidden: false,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      {
+        path: "event-highlights/:id",
+        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        name: "NewsContentEventHighlightsItem",
+        props: true,
+        meta: {
+          title: "活動花絮文章編輯",
+          icon: "dict",
+          hidden: true,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
 
 
 
@@ -305,6 +257,252 @@ export const constantRoutes: RouteRecordRaw[] = [
       //     keepAlive: true,
       //   },
       // },
+    ]
+
+
+  },
+
+  {
+    path: "/organ-content",
+    component: Layout,
+    redirect: "/organ-content/organ-donation",
+    name: "OrganContent",
+    meta: {
+      title: "認識器捐-內容管理",
+      icon: "el-icon-EditPen",
+      hidden: false,
+      roles: ["ADMIN"],
+    },
+    children: [
+      /**器捐學堂路由,以及其編輯路由 */
+      {
+        path: "organ-donation",
+        component: () => import("@/views/content/news/index.vue"),
+        name: "OrganContentOrganDonation",
+        meta: {
+          title: "器捐學堂",
+          icon: "menu",
+          hidden: false,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      {
+        path: "organ-donation/:id",
+        component: () => import("@/views/content/news/NewsItem.vue"),
+        name: "OrganContentOrganDonationItem",
+        props: true,
+        meta: {
+          title: "器捐學堂編輯",
+          icon: "menu",
+          hidden: true,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+
+      /**捐贈者家屬故事路由,以及其編輯路由 */
+      {
+        path: "story-donor-family",
+        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        name: "OrganContentStoryDonorFamily",
+        meta: {
+          title: "捐贈者家屬故事",
+          icon: "menu",
+          hidden: false,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      {
+        path: "story-donor-family/:id",
+        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        name: "OrganContentStoryDonorFamilyItem",
+        props: true,
+        meta: {
+          title: "捐贈者家屬故事編輯",
+          icon: "dict",
+          hidden: true,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      /**受贈者故事路由,以及其編輯路由 */
+      {
+        path: "story-recipient",
+        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        name: "OrganContentStoryRecipient",
+        meta: {
+          title: "受贈者故事",
+          icon: "menu",
+          hidden: false,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      {
+        path: "story-recipient/:id",
+        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        name: "OrganContentStoryRecipientItem",
+        props: true,
+        meta: {
+          title: "受贈者故事編輯",
+          icon: "dict",
+          hidden: true,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      /**影音專區路由,以及其編輯路由 */
+      {
+        path: "video-area",
+        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        name: "OrganContentVideoArea",
+        meta: {
+          title: "影音專區",
+          icon: "menu",
+          hidden: false,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      {
+        path: "video-area/:id",
+        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        name: "OrganContentVideoAreaItem",
+        props: true,
+        meta: {
+          title: "影音專區編輯",
+          icon: "dict",
+          hidden: true,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      /**白袍心聲路由,以及其編輯路由 */
+      {
+        path: "doctor-voice",
+        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        name: "OrganContentDoctorVoice",
+        meta: {
+          title: "白袍心聲",
+          icon: "menu",
+          hidden: false,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      {
+        path: "doctor-voice/:id",
+        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        name: "OrganContentDoctorVoiceItem",
+        props: true,
+        meta: {
+          title: "白袍心聲編輯",
+          icon: "dict",
+          hidden: true,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+
+    ]
+
+
+  },
+
+  {
+    path: "/family-support-content",
+    component: Layout,
+    redirect: "/family-support-content/assistance-resources",
+    name: "FamilySupportContent",
+    meta: {
+      title: "家屬關懷-內容管理",
+      icon: "el-icon-EditPen",
+      hidden: false,
+      roles: ["ADMIN"],
+    },
+    children: [
+      /**協助資源路由,以及其編輯路由 */
+      {
+        path: "assistance-resources",
+        component: () => import("@/views/content/news/index.vue"),
+        name: "FamilySupportContentAssistanceResources",
+        meta: {
+          title: "協助資源",
+          icon: "menu",
+          hidden: false,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      {
+        path: "assistance-resources/:id",
+        component: () => import("@/views/content/news/NewsItem.vue"),
+        name: "FamilySupportContentAssistanceResourcesItem",
+        props: true,
+        meta: {
+          title: "協助資源編輯",
+          icon: "menu",
+          hidden: true,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+
+      /**好書推薦路由,以及其編輯路由 */
+      {
+        path: "book-recommendations",
+        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        name: "FamilySupportContentBookRecommendations",
+        meta: {
+          title: "好書推薦",
+          icon: "menu",
+          hidden: false,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      {
+        path: "book-recommendations/:id",
+        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        name: "FamilySupportContentBookRecommendationsItem",
+        props: true,
+        meta: {
+          title: "好書推薦文章編輯",
+          icon: "dict",
+          hidden: true,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      /**社工專欄路由,以及其編輯路由 */
+      {
+        path: "social-work-column",
+        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        name: "FamilySupportContentSocialWorkColumn",
+        meta: {
+          title: "社工專欄",
+          icon: "menu",
+          hidden: false,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+      {
+        path: "social-work-column/:id",
+        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        name: "FamilySupportContentSocialWorkColumnItem",
+        props: true,
+        meta: {
+          title: "社工專欄文章編輯",
+          icon: "dict",
+          hidden: true,
+          roles: ["ADMIN"],
+          keepAlive: true,
+        },
+      },
+
     ]
   },
 
