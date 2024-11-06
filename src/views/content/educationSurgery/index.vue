@@ -77,7 +77,6 @@ function transFormPagination(response: any, primaryKeyName: string) {
 }
 
 
-
 /** ------------------------------------------------------ */
 
 //手術衛教文章分頁列表
@@ -103,6 +102,7 @@ const getEducationSurgery = async (page: number, size: number) => {
   Object.assign(educationSurgeryTable, transData)
   console.log('獲取手術衛教文章', educationSurgeryTable)
 }
+
 
 //新增手術衛教文章
 const addEducationSurgery = async (data: any) => {
