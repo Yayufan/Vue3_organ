@@ -3,8 +3,11 @@ import axios from 'axios'
 //自定義的上傳器,因為還要區分上傳的圖片區域,以及做URL的緩存和組裝
 export default class MyUploadAdapter {
 
+  loader: any; // 定義 loader 屬性
+  scope: string; // 定義 scope 屬性為字符串類型
+
   //接收兩個參數,loader必要,這是CKEditor必傳的參數,scope為我自定義的參數,是一個字符串
-  constructor(loader, scope) {
+  constructor(loader: any, scope: any) {
     // Save Loader instance to update upload progress.
     this.loader = loader;
     this.scope = scope
