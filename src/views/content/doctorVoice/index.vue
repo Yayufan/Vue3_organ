@@ -1,59 +1,61 @@
 <!--  -->
 <template>
+
   <section class="article-section">
     <el-card class="article-card">
-      <h1>活動花絮文章管理</h1>
-      <ArticleTable :table="articleList" :getApi="getArticle" :addApi="addArticle" :deleteApi="deleteArticle"
+      <h1>最新消息管理</h1>
+      <ArticleTableNoImg :table="articleList" :getApi="getArticle" :addApi="addArticle" :deleteApi="deleteArticle"
         :batchDeleteApi="batchDeleteArticle" :group="GROUP">
-      </ArticleTable>
+      </ArticleTableNoImg>
     </el-card>
+
   </section>
+
 </template>
 
 <script setup lang='ts'>
 
 import { ref, reactive } from 'vue'
-import ArticleTable from '@/components/ArticleTable/index.vue'
+import ArticleTableNoImg from '@/components/ArticleTableNoImg/index.vue'
 import { getAllArticleByGroupByPaginationApi, addArticleApi, deleteArticleApi, batchDeleteArticleApi } from '@/api/article'
 import { transFormPaginationByArticle } from '@/utils/transFormData'
-
 
 //獲取路由
 const route = useRoute()
 //獲取路由器
 const router = useRouter()
 
-//設定article_group , 最重要!!!!!!!
-const GROUP = "eventHighlights"
+//設定article_group 
+const GROUP = "doctorVoice"
+
 
 //後端獲取Page資料後要傳給子組件的數據
 let articleList = reactive({})
 
-//獲取文章
+//獲取最新消息
 const getArticle = async (page: number, size: number) => {
   let res = await getAllArticleByGroupByPaginationApi(GROUP, page, size)
-  //固定轉換數據給前端組件使用
   let transData = transFormPaginationByArticle(res.data, "articleId")
   Object.assign(articleList, transData)
-  // console.log('這是轉換後的數據', articleList)
+  console.log('這是轉換後的數據', articleList)
 }
 
-//新增文章
+//新增最新消息
 const addArticle = async (data: any) => {
-  // console.log('子組件傳來的data', data)
+  console.log('子組件傳來的data', data)
   let res = await addArticleApi(data)
   const currentPath = route.fullPath
   router.push(currentPath + '/' + res.data)
   getArticle(1, 10)
 }
 
-//刪除文章
+//刪除最新消息
 const deleteArticle = async (id: number) => {
   await deleteArticleApi(id)
   getArticle(1, 10)
 }
 
-//批量文章
+//批量刪除最新消息
 const batchDeleteArticle = async (data: any) => {
   await batchDeleteArticleApi(data)
   getArticle(1, 10)
@@ -64,29 +66,22 @@ onMounted(() => {
   getArticle(1, 10)
 })
 
-
-
 </script>
 
 <style scoped lang="scss">
-//這個組件的setion
 .article-section {
   width: 95%;
   margin: 0 auto;
 
-
-  //這個組件的card
   .article-card {
     margin-top: 2%;
     margin-bottom: 2%;
+  }
 
-    //這個組件的標題
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin: 1% 0;
-    }
-
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin: 1% 0;
   }
 }
 </style>

@@ -4,20 +4,19 @@
     <el-card class="article-item-card-box">
 
 
-      <el-form :model="eventHighlights" class="article-form" ref="articleForm" :rules="eventHighlightsRules"
-        label-position="top">
+      <el-form :model="article" class="article-form" ref="articleForm" :rules="articleRules" label-position="top">
 
         <div class="outer-input-box">
 
           <div class="text-input-box">
             <el-form-item label="文章類別" prop="type">
-              <el-input v-model="eventHighlights.type" placeholder="消息類型" />
+              <el-input v-model="article.type" placeholder="消息類型" />
             </el-form-item>
             <el-form-item label="文章標題" prop="title">
-              <el-input v-model="eventHighlights.title" placeholder="消息標題" />
+              <el-input v-model="article.title" placeholder="消息標題" />
             </el-form-item>
             <el-form-item label="文章描述">
-              <el-input type="textarea" v-model="eventHighlights.description" autocomplete="off" />
+              <el-input type="textarea" v-model="article.description" autocomplete="off" />
             </el-form-item>
           </div>
           <div class="img-box">
@@ -39,11 +38,11 @@
 
         <div style="text-align: right;">
           <el-button type="info" @click="back">返回</el-button>
-          <el-button type="primary" @click="submitMedicalKnowledgeForm(articleForm)">保存</el-button>
+          <el-button type="primary" @click="submitArticleForm(articleForm)">保存</el-button>
         </div>
       </el-form>
 
-      <CustomCKEditor :scope="scope" :htmlContent="eventHighlights.content" :updateContent="updateContent">
+      <CustomCKEditor :scope="scope" :htmlContent="article.content" :updateContent="updateContent">
       </CustomCKEditor>
 
     </el-card>
@@ -68,7 +67,7 @@ let { id } = defineProps(['id'])
 //數據,父傳子
 const scope = ref("eventHighlightsScope")
 
-const eventHighlights = reactive<Record<string, any>>({
+const article = reactive<Record<string, any>>({
   articleId: '',
   type: '',
   title: '',
@@ -80,7 +79,7 @@ const eventHighlights = reactive<Record<string, any>>({
 
 //方法,子傳父
 const updateContent = (newValue: string) => {
-  eventHighlights.content = newValue;
+  article.content = newValue;
 };
 
 /** 當前組件的配置  */
@@ -100,7 +99,7 @@ const route = useRoute()
 //獲取新增最新消息表單DOM
 const articleForm = ref()
 //表單校驗規則
-const eventHighlightsRules = reactive({
+const articleRules = reactive({
   type: [
     {
       required: true,
@@ -150,9 +149,9 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 }
 
 //獲取文章
-const getMedicalKnowledge = async () => {
+const getArticle = async () => {
   let res = await getArticleApi(id)
-  Object.assign(eventHighlights, res.data)
+  Object.assign(article, res.data)
 }
 
 //返回列表
@@ -179,7 +178,7 @@ const back = () => {
 
 
 //送出表單
-const submitMedicalKnowledgeForm = (form: FormInstance) => {
+const submitArticleForm = (form: FormInstance) => {
   //沒有抓到的這個Dom直接返回
   if (!form) return
   form.validate(async (valid) => {
@@ -193,12 +192,12 @@ const submitMedicalKnowledgeForm = (form: FormInstance) => {
       if (tempUploadUrlStr !== null) {
         tempUploadUrlList = tempUploadUrlStr.split(",");
       }
-      //賦予進eventHighlights響應式對象中
-      eventHighlights.tempUploadUrl = tempUploadUrlList
+      //賦予進article響應式對象中
+      article.tempUploadUrl = tempUploadUrlList
 
       let formData = new FormData();
       // 將響應式對象轉換為普通對象，然後轉換為 JSON 字符串
-      const jsonData = JSON.stringify(eventHighlights)
+      const jsonData = JSON.stringify(article)
       formData.append('data', new Blob([jsonData], { type: "application/json" }))
       formData.append('file', imgFile)
 
@@ -226,8 +225,8 @@ const submitMedicalKnowledgeForm = (form: FormInstance) => {
 
 
 onMounted(async () => {
-  await getMedicalKnowledge()
-  imageUrl.value = protocol + '//' + hostname + '/minio' + eventHighlights.coverThumbnailUrl
+  await getArticle()
+  imageUrl.value = protocol + '//' + hostname + '/minio' + article.coverThumbnailUrl
 })
 
 </script>
