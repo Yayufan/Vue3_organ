@@ -1,4 +1,4 @@
-<!-- 每個最新消息內容的通用模板 -->
+<!-- 每個沒有縮圖的文章內容的通用模板 -->
 <template>
   <section class="no-img-article-item-section">
     <el-card class="no-img-article-card-box">
