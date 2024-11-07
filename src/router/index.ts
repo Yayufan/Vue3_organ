@@ -218,7 +218,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       /**活動花絮路由,以及其編輯路由 */
       {
         path: "event-highlights",
-        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        component: () => import("@/views/content/eventHighlights/index.vue"),
         name: "NewsContentEventHighlights",
         meta: {
           title: "活動花絮",
@@ -230,7 +230,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "event-highlights/:id",
-        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        component: () => import("@/views/content/eventHighlights/EventHighlightsItem.vue"),
         name: "NewsContentEventHighlightsItem",
         props: true,
         meta: {

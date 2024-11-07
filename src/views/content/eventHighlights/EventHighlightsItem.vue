@@ -1,23 +1,23 @@
 <!-- 每個最新消息內容的通用模板 -->
 <template>
-  <section class="medical-knowledge-item-section">
-    <el-card class="medical-knowledge-card-box">
+  <section class="article-item-section">
+    <el-card class="article-item-card-box">
 
 
-      <el-form :model="medicalKnowledge" class="medical-knowledge-form" ref="medicalKnowledgeForm"
-        :rules="medicalKnowledgeRules" label-position="top">
+      <el-form :model="eventHighlights" class="article-form" ref="articleForm" :rules="eventHighlightsRules"
+        label-position="top">
 
         <div class="outer-input-box">
 
           <div class="text-input-box">
             <el-form-item label="文章類別" prop="type">
-              <el-input v-model="medicalKnowledge.type" placeholder="消息類型" />
+              <el-input v-model="eventHighlights.type" placeholder="消息類型" />
             </el-form-item>
             <el-form-item label="文章標題" prop="title">
-              <el-input v-model="medicalKnowledge.title" placeholder="消息標題" />
+              <el-input v-model="eventHighlights.title" placeholder="消息標題" />
             </el-form-item>
             <el-form-item label="文章描述">
-              <el-input type="textarea" v-model="medicalKnowledge.description" autocomplete="off" />
+              <el-input type="textarea" v-model="eventHighlights.description" autocomplete="off" />
             </el-form-item>
           </div>
           <div class="img-box">
@@ -39,11 +39,11 @@
 
         <div style="text-align: right;">
           <el-button type="info" @click="back">返回</el-button>
-          <el-button type="primary" @click="submitMedicalKnowledgeForm(medicalKnowledgeForm)">保存</el-button>
+          <el-button type="primary" @click="submitMedicalKnowledgeForm(articleForm)">保存</el-button>
         </div>
       </el-form>
 
-      <CustomCKEditor :scope="scope" :htmlContent="medicalKnowledge.content" :updateContent="updateContent">
+      <CustomCKEditor :scope="scope" :htmlContent="eventHighlights.content" :updateContent="updateContent">
       </CustomCKEditor>
 
     </el-card>
@@ -59,15 +59,17 @@ import { ref, reactive } from 'vue'
 import CustomCKEditor from '@/components/CustomCKEditor/index.vue'
 import type { FormInstance, FormRules, UploadRawFile, UploadProps } from 'element-plus'
 import { updateArticleApi, getArticleApi } from '@/api/article'
+
+
 //路由參數,這邊注意解構賦值後,會失去響應式
 let { id } = defineProps(['id'])
 
 /**  使用CustomCKEditor組件的配置  */
 //數據,父傳子
-const scope = ref("medicalKnowledgeScope")
+const scope = ref("eventHighlightsScope")
 
-const medicalKnowledge = reactive<Record<string, any>>({
-  medicalKnowledgeId: '',
+const eventHighlights = reactive<Record<string, any>>({
+  articleId: '',
   type: '',
   title: '',
   description: null,
@@ -78,7 +80,7 @@ const medicalKnowledge = reactive<Record<string, any>>({
 
 //方法,子傳父
 const updateContent = (newValue: string) => {
-  medicalKnowledge.content = newValue;
+  eventHighlights.content = newValue;
 };
 
 /** 當前組件的配置  */
@@ -94,9 +96,9 @@ let imgFile = <UploadRawFile>{}
 //獲取路由器
 const router = useRouter()
 //獲取新增最新消息表單DOM
-const medicalKnowledgeForm = ref()
+const articleForm = ref()
 //表單校驗規則
-const medicalKnowledgeRules = reactive({
+const eventHighlightsRules = reactive({
   type: [
     {
       required: true,
@@ -148,7 +150,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 //獲取文章
 const getMedicalKnowledge = async () => {
   let res = await getArticleApi(id)
-  Object.assign(medicalKnowledge, res.data)
+  Object.assign(eventHighlights, res.data)
 }
 
 //返回列表
@@ -172,12 +174,12 @@ const submitMedicalKnowledgeForm = (form: FormInstance) => {
       if (tempUploadUrlStr !== null) {
         tempUploadUrlList = tempUploadUrlStr.split(",");
       }
-      //賦予進medicalKnowledge響應式對象中
-      medicalKnowledge.tempUploadUrl = tempUploadUrlList
+      //賦予進eventHighlights響應式對象中
+      eventHighlights.tempUploadUrl = tempUploadUrlList
 
       let formData = new FormData();
       // 將響應式對象轉換為普通對象，然後轉換為 JSON 字符串
-      const jsonData = JSON.stringify(medicalKnowledge)
+      const jsonData = JSON.stringify(eventHighlights)
       formData.append('data', new Blob([jsonData], { type: "application/json" }))
       formData.append('file', imgFile)
 
@@ -206,7 +208,7 @@ const submitMedicalKnowledgeForm = (form: FormInstance) => {
 
 onMounted(async () => {
   await getMedicalKnowledge()
-  imageUrl.value = protocol + '//' + hostname + '/minio' + medicalKnowledge.coverThumbnailUrl
+  imageUrl.value = protocol + '//' + hostname + '/minio' + eventHighlights.coverThumbnailUrl
 })
 
 </script>
@@ -215,14 +217,14 @@ onMounted(async () => {
 
 
 <style scoped lang="scss">
-.medical-knowledge-item-section {
+.article-item-section {
   width: 90%;
   margin: 1% auto;
 
-  .medical-knowledge-card-box {
+  .article-item-card-box {
     min-height: 80vh;
 
-    .medical-knowledge-form {
+    .article-form {
       margin-bottom: 1%;
 
       .outer-input-box {

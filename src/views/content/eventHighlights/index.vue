@@ -3,8 +3,8 @@
   <section class="article-section">
     <el-card class="article-card">
       <h1>活動花絮文章管理</h1>
-      <ArticleTable :table="eventHighlightList" :getApi="getEventHighlight" :addApi="addEventHighlight"
-        :deleteApi="deleteEventHighlight" :batchDeleteApi="batchDeleteEventHighlight" :group="GROUP">
+      <ArticleTable :table="eventHighlightsList" :getApi="getEventHighlights" :addApi="addEventHighlights"
+        :deleteApi="deleteEventHighlights" :batchDeleteApi="batchDeleteEventHighlights" :group="GROUP">
       </ArticleTable>
     </el-card>
 
@@ -16,16 +16,18 @@
 import { ref, reactive } from 'vue'
 import ArticleTable from '@/components/ArticleTable/index.vue'
 import { getAllArticleByGroupByPaginationApi, addArticleApi, deleteArticleApi, batchDeleteArticleApi } from '@/api/article'
+import { transFormPaginationByArticle } from '@/utils/transFormData'
+
 
 //獲取路由
 const route = useRoute()
 //獲取路由器
 const router = useRouter()
 //設定article_group 
-const GROUP = "eventHighlight"
+const GROUP = "eventHighlights"
 
 //後端獲取Page資料後要傳給子組件的數據
-let eventHighlightList = reactive({})
+let eventHighlightsList = reactive({})
 
 /**
  * 用於轉換成子組件需要的分頁對象, 主要是後端的主鍵id 要轉成前端通用的id, 
@@ -57,37 +59,37 @@ function transFormPagination(response: any, primaryKeyName: any) {
 }
 
 //獲取最新消息
-const getEventHighlight = async (page: number, size: number) => {
+const getEventHighlights = async (page: number, size: number) => {
   let res = await getAllArticleByGroupByPaginationApi(GROUP, page, size)
-  let transData = transFormPagination(res.data, "articleId")
-  Object.assign(eventHighlightList, transData)
-  console.log('這是轉換後的數據', eventHighlightList)
+  let transData = transFormPaginationByArticle(res.data, "articleId")
+  Object.assign(eventHighlightsList, transData)
+  console.log('這是轉換後的數據', eventHighlightsList)
 }
 
 //新增最新消息
-const addEventHighlight = async (data: any) => {
+const addEventHighlights = async (data: any) => {
   console.log('子組件傳來的data', data)
   let res = await addArticleApi(data)
   const currentPath = route.fullPath
   router.push(currentPath + '/' + res.data)
-  getEventHighlight(1, 10)
+  getEventHighlights(1, 10)
 }
 
 //刪除最新消息
-const deleteEventHighlight = async (id: number) => {
+const deleteEventHighlights = async (id: number) => {
   await deleteArticleApi(id)
-  getEventHighlight(1, 10)
+  getEventHighlights(1, 10)
 }
 
 //批量刪除最新消息
-const batchDeleteEventHighlight = async (data: any) => {
+const batchDeleteEventHighlights = async (data: any) => {
   await batchDeleteArticleApi(data)
-  getEventHighlight(1, 10)
+  getEventHighlights(1, 10)
 }
 
 //頁面掛載時獲取數據
 onMounted(() => {
-  getEventHighlight(1, 10)
+  getEventHighlights(1, 10)
 })
 
 
