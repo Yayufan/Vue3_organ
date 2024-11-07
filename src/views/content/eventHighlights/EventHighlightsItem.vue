@@ -95,6 +95,8 @@ let imgFile = <UploadRawFile>{}
 
 //獲取路由器
 const router = useRouter()
+const route = useRoute()
+
 //獲取新增最新消息表單DOM
 const articleForm = ref()
 //表單校驗規則
@@ -155,7 +157,24 @@ const getMedicalKnowledge = async () => {
 
 //返回列表
 const back = () => {
-  router.push("/content/medical-knowledge")
+  // 取得當前路徑並按 '/' 分割為陣列
+  const pathSegments = route.path.split('/').filter(Boolean);
+
+  // 確保有上層路徑可回
+  if (pathSegments.length > 1) {
+    // 移除最後一段路徑
+    pathSegments.pop();
+
+    // 組合回去並加上 `/`
+    const parentPath = '/' + pathSegments.join('/');
+
+    // 導航回上層路徑
+    router.push(parentPath);
+
+  } else {
+    //沒有父路由,返回上一個歷史紀錄
+    router.go(-1)
+  }
 }
 
 
@@ -192,7 +211,7 @@ const submitMedicalKnowledgeForm = (form: FormInstance) => {
         //重製上傳的檔案
         imgFile = <UploadRawFile>{}
         //保存後返回列表
-        router.push("/content/medical-knowledge")
+        back()
 
         ElMessage.success("儲存成功")
       } catch (err) {

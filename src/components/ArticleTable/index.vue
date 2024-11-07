@@ -336,7 +336,10 @@ const deleteList = () => {
 /**-----------編輯相關操作------------------ */
 //編輯醫學新知
 const editRow = (id: number): void => {
+  console.log(router)
   const currentPath = route.fullPath
+  console.log('當前路徑', currentPath)
+  // router.push(currentPath + id)
   router.push(currentPath + '/' + id)
 }
 

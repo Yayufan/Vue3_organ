@@ -901,7 +901,10 @@ const router = createRouter({
 
   //改用歷史模式,但要套入當前的baseURL,且Nginx要記得做設定
   history: createWebHistory(import.meta.env.BASE_URL),
+  //剛剛的路由
   routes: constantRoutes,
+  //移除多餘的斜線,保持乾淨
+  strict: true,
   // 刷新时，滚动条位置还原
   scrollBehavior: () => ({ left: 0, top: 0 }),
 });
