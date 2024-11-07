@@ -2,20 +2,20 @@
 <template>
   <div class="function-bar">
     <el-button type="primary" @click="toggleAddDialog">
-      新增消息<el-icon class="el-icon--right">
+      新增文章<el-icon class="el-icon--right">
         <Plus />
       </el-icon>
     </el-button>
 
     <el-button type="danger" @click="deleteList" :disabled="deleteSelectList.length > 0 ? false : true">
-      刪除消息<el-icon class="el-icon--right">
+      刪除文章<el-icon class="el-icon--right">
         <Delete />
       </el-icon>
     </el-button>
   </div>
 
 
-  <el-table class="news-table" :data="newsList.records" @selection-change="handleSelectionChange">
+  <el-table class="no-img-article-table" :data="noImgArticleList.records" @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="55" />
     <el-table-column fixed prop="announcementDate" label="公告日期" width="150" />
     <el-table-column prop="type" label="類別" width="120" />
@@ -38,28 +38,33 @@
       分頁插件 total為總資料數(這邊設置20筆),  default-page-size代表每頁顯示資料(預設為10筆,這邊設置為5筆) 
       current-page當前頁數,官方建議使用v-model與current-page去與自己設定的變量做綁定,
     -->
-  <div class="example-pagination-block news-pagination">
-    <el-pagination layout="prev, pager, next" :page-count="Number(newsList.pages)"
-      :default-page-size="Number(newsList.size)" v-model:current-page="currentPage" :hide-on-single-page="true" />
+  <div class="example-pagination-block no-img-article-pagination">
+    <el-pagination layout="prev, pager, next" :page-count="Number(noImgArticleList.pages)"
+      :default-page-size="Number(noImgArticleList.size)" v-model:current-page="currentPage"
+      :hide-on-single-page="true" />
   </div>
 
 
 
   <!-- 創建活動對話框 -->
-  <ElDialog v-model="dialogFormVisible" title="創建消息" width="500">
+  <ElDialog v-model="dialogFormVisible" title="創建文章" width="500">
 
-    <el-form :model="newsFormData" ref="form" :rules="newsRules">
+    <el-form :model="noImgArticleFormData" ref="form" :rules="noImgArticleRules">
 
-      <el-form-item label="消息類別" :label-width="formLabelWidth" prop="type">
-        <el-input v-model="newsFormData.type" autocomplete="off" placeholder="一般公告" />
+      <el-form-item label="文章類別" :label-width="formLabelWidth" prop="type">
+        <el-input v-model="noImgArticleFormData.type" autocomplete="off" placeholder="一般公告" />
       </el-form-item>
 
-      <el-form-item label="消息標題" :label-width="formLabelWidth" prop="title">
-        <el-input v-model="newsFormData.title" autocomplete="off" />
+      <el-form-item label="文章標題" :label-width="formLabelWidth" prop="title">
+        <el-input v-model="noImgArticleFormData.title" autocomplete="off" />
+      </el-form-item>
+
+      <el-form-item label="文章描述" :label-width="formLabelWidth" prop="description">
+        <el-input type="textarea" v-model="noImgArticleFormData.description" autocomplete="off" />
       </el-form-item>
 
       <el-form-item label="公告日期" :label-width="formLabelWidth" prop="announcementDate">
-        <el-date-picker v-model="newsFormData.announcementDate" type="date" placeholder="Pick a Date"
+        <el-date-picker v-model="noImgArticleFormData.announcementDate" type="date" placeholder="Pick a Date"
           format="YYYY-MM-DD" value-format="YYYY-MM-DD" />
       </el-form-item>
 
@@ -121,10 +126,9 @@ const props = defineProps({
 });
 
 
-
 //如果父組件的資料為異步傳遞就使用watch
 watch(() => { return props.table }, (newValue, oldValue) => {
-  newsList = newValue
+  noImgArticleList = newValue
 })
 
 /**--------------顯示數據相關---------------------------- */
@@ -133,8 +137,8 @@ watch(() => { return props.table }, (newValue, oldValue) => {
 let currentPage = ref(1)
 
 //獲取的最新消息List
-let newsList = reactive<Record<string, any>>({})
-newsList = props.table
+let noImgArticleList = reactive<Record<string, any>>({})
+noImgArticleList = props.table
 
 //監聽當前頁數的變化,如果有更動就call API 獲取數組數據
 watch(currentPage, (value, oldValue) => {
@@ -199,20 +203,18 @@ const dialogFormVisible = ref(false)
 const form = ref()
 
 //表單數據
-const newsFormData = reactive({
+const noImgArticleFormData = reactive({
   type: '一般公告',
   title: '',
+  description: null,
   announcementDate: '',
   groupType: ''
 })
-
-newsFormData.groupType = props.group
-
-//圖片實際數據
-let imgFile = <UploadRawFile>{}
+//獲取父組件給的group
+noImgArticleFormData.groupType = props.group
 
 //表單校驗規則
-const newsRules = reactive<FormRules>({
+const noImgArticleRules = reactive<FormRules>({
   type: [
     {
       required: true,
@@ -233,6 +235,13 @@ const newsRules = reactive<FormRules>({
       message: '公告日期不能為空',
       trigger: 'blur',
     }
+  ],
+  description: [
+    {
+      required: true,
+      message: '描述不能為空',
+      trigger: 'blur',
+    }
   ]
 })
 
@@ -250,9 +259,8 @@ const submitForm = (form: FormInstance | undefined) => {
       try {
         let formData = new FormData()
         // 將響應式對象轉換為普通對象，然後轉換為 JSON 字符串
-        const jsonData = JSON.stringify(newsFormData)
+        const jsonData = JSON.stringify(noImgArticleFormData)
         formData.append('data', new Blob([jsonData], { type: "application/json" }))
-        formData.append('file', imgFile)
 
         //呼叫父組件給的新增function API
         await props.addApi(formData)
@@ -286,13 +294,13 @@ const editRow = (id: number): void => {
   margin-bottom: 1%;
 }
 
-.news-table {
+.no-img-article-table {
   width: 100%;
   height: auto;
 }
 
 
-.news-pagination {
+.no-img-article-pagination {
   margin-top: 1%;
   margin-bottom: 1%;
 }

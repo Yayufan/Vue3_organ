@@ -382,7 +382,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       /**白袍心聲路由,以及其編輯路由 */
       {
         path: "doctor-voice",
-        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        component: () => import("@/views/content/doctorVoice/index.vue"),
         name: "OrganContentDoctorVoice",
         meta: {
           title: "白袍心聲",
@@ -394,7 +394,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "doctor-voice/:id",
-        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        component: () => import("@/views/content/doctorVoice/DoctorVoiceItem.vue"),
         name: "OrganContentDoctorVoiceItem",
         props: true,
         meta: {

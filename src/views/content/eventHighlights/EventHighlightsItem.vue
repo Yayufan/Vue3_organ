@@ -15,7 +15,7 @@
             <el-form-item label="文章標題" prop="title">
               <el-input v-model="article.title" placeholder="消息標題" />
             </el-form-item>
-            <el-form-item label="文章描述">
+            <el-form-item label="文章描述" prop="description">
               <el-input type="textarea" v-model="article.description" autocomplete="off" />
             </el-form-item>
           </div>
@@ -118,6 +118,13 @@ const articleRules = reactive({
     {
       required: true,
       message: '公告日期不能為空',
+      trigger: 'blur',
+    }
+  ],
+  description: [
+    {
+      required: true,
+      message: '描述不能為空',
       trigger: 'blur',
     }
   ]

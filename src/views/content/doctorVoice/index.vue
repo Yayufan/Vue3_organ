@@ -3,7 +3,7 @@
 
   <section class="article-section">
     <el-card class="article-card">
-      <h1>最新消息管理</h1>
+      <h1>白袍心聲管理</h1>
       <ArticleTableNoImg :table="articleList" :getApi="getArticle" :addApi="addArticle" :deleteApi="deleteArticle"
         :batchDeleteApi="batchDeleteArticle" :group="GROUP">
       </ArticleTableNoImg>
