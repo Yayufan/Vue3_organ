@@ -58,7 +58,7 @@
   <!-- 創建活動對話框 -->
   <ElDialog v-model="dialogFormVisible" title="創建文章" width="500">
 
-    <el-form :model="articleFormData" ref="form" :rules="articleRules">
+    <el-form :model="articleFormData" ref="form" :rules="articleRules" label-position="top">
 
       <el-form-item label="文章類別" :label-width="formLabelWidth" prop="type">
         <el-input v-model="articleFormData.type" autocomplete="off" placeholder="一般公告" />
@@ -68,11 +68,11 @@
         <el-input v-model="articleFormData.title" autocomplete="off" />
       </el-form-item>
 
-      <el-form-item label="文章描述" :label-width="formLabelWidth">
+      <el-form-item label="文章描述" :label-width="formLabelWidth" prop="description">
         <el-input type="textarea" v-model="articleFormData.description" autocomplete="off" />
       </el-form-item>
 
-      <el-form-item label="縮圖上傳" :label-width="formLabelWidth">
+      <el-form-item :label="'縮圖上傳(建議解析度 800*600)'" :label-width="formLabelWidth">
 
         <el-upload class="thumbnail-uploader" :action="envAPI + '/upload/img'" :show-file-list="false"
           :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
@@ -133,6 +133,7 @@ const props = defineProps({
     required: true
   }
 });
+
 //獲取路由
 const route = useRoute()
 //獲取路由器
@@ -179,8 +180,8 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
   response,
   uploadFile
 ) => {
-  console.log(response)
-  console.log(uploadFile)
+  // console.log(response)
+  // console.log(uploadFile)
   imageUrl.value = URL.createObjectURL(uploadFile.raw!)
   //將檔案傳給接收圖片的數據
   imgFile = uploadFile.raw!
@@ -232,13 +233,13 @@ const articleRules = reactive<FormRules>({
       trigger: 'blur',
     },
   ],
-  // description: [
-  //   {
-  //     required: true,
-  //     message: '描述不能為空',
-  //     trigger: 'blur',
-  //   }
-  // ]
+  description: [
+    {
+      required: true,
+      message: '描述不能為空',
+      trigger: 'blur',
+    }
+  ]
 })
 
 /**
@@ -336,10 +337,7 @@ const deleteList = () => {
 /**-----------編輯相關操作------------------ */
 //編輯醫學新知
 const editRow = (id: number): void => {
-  console.log(router)
   const currentPath = route.fullPath
-  console.log('當前路徑', currentPath)
-  // router.push(currentPath + id)
   router.push(currentPath + '/' + id)
 }
 
