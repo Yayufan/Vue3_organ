@@ -52,7 +52,7 @@ let { id } = defineProps(['id'])
 
 /**  使用CustomCKEditor組件的配置  */
 //數據,父傳子
-const scope = ref("doctorVoiceScope")
+const scope = ref("assistanceResourcesScope")
 
 let noImgArticleData = reactive({
   articleId: '',

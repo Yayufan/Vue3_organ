@@ -228,6 +228,11 @@ const noImgArticleRules = reactive<FormRules>({
       message: '標題不能為空',
       trigger: 'blur',
     },
+    {
+      max: 255,
+      message: '內容長度不能超過 255 字符',
+      trigger: 'blur'
+    }
   ],
   announcementDate: [
     {
@@ -241,6 +246,11 @@ const noImgArticleRules = reactive<FormRules>({
       required: true,
       message: '描述不能為空',
       trigger: 'blur',
+    },
+    {
+      max: 255,
+      message: '內容長度不能超過 255 字符',
+      trigger: 'blur'
     }
   ]
 })

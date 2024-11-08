@@ -426,7 +426,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       /**協助資源路由,以及其編輯路由 */
       {
         path: "assistance-resources",
-        component: () => import("@/views/content/news/index.vue"),
+        component: () => import("@/views/content/assistanceResources/index.vue"),
         name: "FamilySupportContentAssistanceResources",
         meta: {
           title: "協助資源",
@@ -438,7 +438,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "assistance-resources/:id",
-        component: () => import("@/views/content/news/NewsItem.vue"),
+        component: () => import("@/views/content/assistanceResources/AssistanceResourcesItem.vue"),
         name: "FamilySupportContentAssistanceResourcesItem",
         props: true,
         meta: {
@@ -479,7 +479,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       /**社工專欄路由,以及其編輯路由 */
       {
         path: "social-work-column",
-        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        component: () => import("@/views/content/socialWorkColumn/index.vue"),
         name: "FamilySupportContentSocialWorkColumn",
         meta: {
           title: "社工專欄",
@@ -491,7 +491,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "social-work-column/:id",
-        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        component: () => import("@/views/content/socialWorkColumn/socialWorkColumnItem.vue"),
         name: "FamilySupportContentSocialWorkColumnItem",
         props: true,
         meta: {
