@@ -453,7 +453,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       /**好書推薦路由,以及其編輯路由 */
       {
         path: "book-recommendations",
-        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        component: () => import("@/views/content/bookRecommendations/index.vue"),
         name: "FamilySupportContentBookRecommendations",
         meta: {
           title: "好書推薦",
@@ -465,7 +465,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "book-recommendations/:id",
-        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        component: () => import("@/views/content/bookRecommendations/BookRecommendationsItem.vue"),
         name: "FamilySupportContentBookRecommendationsItem",
         props: true,
         meta: {
