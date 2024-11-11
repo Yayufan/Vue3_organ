@@ -356,7 +356,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       /**影音專區路由,以及其編輯路由 */
       {
         path: "video-area",
-        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        component: () => import("@/views/content/videoArea/index.vue"),
         name: "OrganContentVideoArea",
         meta: {
           title: "影音專區",
@@ -368,7 +368,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "video-area/:id",
-        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        component: () => import("@/views/content/videoArea/VideoAreaItem.vue"),
         name: "OrganContentVideoAreaItem",
         props: true,
         meta: {
