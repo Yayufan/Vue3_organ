@@ -304,7 +304,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       /**捐贈者家屬故事路由,以及其編輯路由 */
       {
         path: "story-donor-family",
-        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        component: () => import("@/views/content/storyDonorFamily/index.vue"),
         name: "OrganContentStoryDonorFamily",
         meta: {
           title: "捐贈者家屬故事",
@@ -316,7 +316,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "story-donor-family/:id",
-        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        component: () => import("@/views/content/storyDonorFamily/StoryDonorFamilyItem.vue"),
         name: "OrganContentStoryDonorFamilyItem",
         props: true,
         meta: {
