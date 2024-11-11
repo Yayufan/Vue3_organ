@@ -277,7 +277,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       /**器捐學堂路由,以及其編輯路由 */
       {
         path: "organ-donation",
-        component: () => import("@/views/content/news/index.vue"),
+        component: () => import("@/views/content/organDonation/index.vue"),
         name: "OrganContentOrganDonation",
         meta: {
           title: "器捐學堂",
@@ -289,7 +289,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "organ-donation/:id",
-        component: () => import("@/views/content/news/NewsItem.vue"),
+        component: () => import("@/views/content/organDonation/OrganDonationItem.vue"),
         name: "OrganContentOrganDonationItem",
         props: true,
         meta: {
@@ -330,7 +330,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       /**受贈者故事路由,以及其編輯路由 */
       {
         path: "story-recipient",
-        component: () => import("@/views/content/medicalKnowledge/index.vue"),
+        component: () => import("@/views/content/storyRecipient/index.vue"),
         name: "OrganContentStoryRecipient",
         meta: {
           title: "受贈者故事",
@@ -342,7 +342,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "story-recipient/:id",
-        component: () => import("@/views/content/medicalKnowledge/MedicalKnowledgeItem.vue"),
+        component: () => import("@/views/content/storyRecipient/StoryRecipientItem.vue"),
         name: "OrganContentStoryRecipientItem",
         props: true,
         meta: {
