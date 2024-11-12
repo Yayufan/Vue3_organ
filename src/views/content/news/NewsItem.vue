@@ -1,83 +1,105 @@
 <!-- 每個最新消息內容的通用模板 -->
 <template>
-  <section class="news-item-section">
-    <el-card class="news-card-box">
+  <section class="article-item-section">
+    <el-card class="article-item-card-box">
 
-      <el-form :model="newsData" class="news-form" ref="newsForm" :rules="newsRules">
-        <el-form-item label="消息類別" prop="type">
-          <el-input v-model="newsData.type" placeholder="消息類型" />
-        </el-form-item>
-        <el-form-item label="消息標題" prop="title">
-          <el-input v-model="newsData.title" placeholder="消息標題" />
-        </el-form-item>
-        <el-form-item label="公告日期" prop="announcementDate">
-          <el-date-picker v-model="newsData.announcementDate" type="date" placeholder="Pick a Date" format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD" />
-        </el-form-item>
+
+      <el-form :model="article" class="article-form" ref="articleForm" :rules="articleRules" label-position="top">
+
+        <div class="outer-input-box">
+
+          <div class="text-input-box">
+            <el-form-item label="文章類別" prop="type">
+              <el-input v-model="article.type" placeholder="消息類型" />
+            </el-form-item>
+            <el-form-item label="文章標題" prop="title">
+              <el-input v-model="article.title" placeholder="消息標題" />
+            </el-form-item>
+            <el-form-item label="文章描述" prop="description">
+              <el-input type="textarea" v-model="article.description" autocomplete="off" />
+            </el-form-item>
+          </div>
+          <div class="img-box">
+
+            <el-form-item label="縮圖上傳" label-position="top">
+
+              <el-upload class="thumbnail-uploader" :action="envAPI + '/upload/img'" :show-file-list="false"
+                :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <el-icon v-else class="avatar-uploader-icon">
+                  <Plus />
+                </el-icon>
+              </el-upload>
+
+            </el-form-item>
+
+          </div>
+        </div>
 
         <div style="text-align: right;">
           <el-button type="info" @click="back">返回</el-button>
-          <el-button type="primary" @click="submitNewsForm(newsForm)">保存</el-button>
+          <el-button type="primary" @click="submitArticleForm(articleForm)">保存</el-button>
         </div>
       </el-form>
 
-      <!-- CKEditor5 編輯器組件   -->
-      <CustomCKEditor :scope="scope" :htmlContent="newsData.content" :updateContent="updateContent">
+      <CustomCKEditor :scope="scope" :htmlContent="article.content" :updateContent="updateContent">
       </CustomCKEditor>
 
     </el-card>
 
-
-    <!-- 頁面顯示 -->
-    <!-- 顯示時要在父標籤上寫class= 'ck-content' -->
-    <div v-html="newsData.content" class="ck-content"></div>
-
   </section>
+
+
 </template>
 
 <script setup lang="ts">
 
 import { ref, reactive } from 'vue'
-import { getArticleApi, updateArticleApi } from '@/api/article'
-import { FormInstance, UploadRawFile } from 'element-plus'
 import CustomCKEditor from '@/components/CustomCKEditor/index.vue'
+import type { FormInstance, FormRules, UploadRawFile, UploadProps } from 'element-plus'
+import { updateArticleApi, getArticleApi } from '@/api/article'
 
 
-//獲取動態路由參數
+//路由參數,這邊注意解構賦值後,會失去響應式
 let { id } = defineProps(['id'])
-
 
 /**  使用CustomCKEditor組件的配置  */
 //數據,父傳子
 const scope = ref("newsScope")
 
-let newsData = reactive({
+const article = reactive<Record<string, any>>({
   articleId: '',
   type: '',
   title: '',
+  description: null,
   content: '',
-  announcementDate: '',
-  tempUploadUrl: <any[]>[]
-})
+  coverThumbnailUrl: ''
+
+});
 
 //方法,子傳父
 const updateContent = (newValue: string) => {
-  newsData.content = newValue;
+  article.content = newValue;
 };
 
+/** 當前組件的配置  */
+const protocol = window.location.protocol; // 获取当前协议 (例如 "http:" 或 "https:")
+const hostname = window.location.hostname; // 获取当前域名 (例如 "www.example.com")
 
-/**  當前組件的配置   */
+const envAPI = import.meta.env.VITE_APP_BASE_API;
+const imageUrl = ref()
+
+//圖片數據
+let imgFile = <UploadRawFile>{}
 
 //獲取路由器
 const router = useRouter()
+const route = useRoute()
+
 //獲取新增最新消息表單DOM
-const newsForm = ref()
-
-//圖片實際數據
-let imgFile = <UploadRawFile>{}
-
+const articleForm = ref()
 //表單校驗規則
-const newsRules = reactive({
+const articleRules = reactive({
   type: [
     {
       required: true,
@@ -91,6 +113,11 @@ const newsRules = reactive({
       message: '標題不能為空',
       trigger: 'blur',
     },
+    {
+      max: 255,
+      message: '內容長度不能超過 255 字符',
+      trigger: 'blur'
+    }
   ],
   announcementDate: [
     {
@@ -98,53 +125,104 @@ const newsRules = reactive({
       message: '公告日期不能為空',
       trigger: 'blur',
     }
+  ],
+  description: [
+    {
+      required: true,
+      message: '描述不能為空',
+      trigger: 'blur',
+    }
   ]
 })
 
 
-//獲取消息
-const getNews = async () => {
+//檔案上傳成功的回調
+const handleAvatarSuccess: UploadProps['onSuccess'] = (
+  response,
+  uploadFile
+) => {
+  console.log(response)
+  console.log(uploadFile)
+
+  imageUrl.value = URL.createObjectURL(uploadFile.raw!)
+
+  //將檔案傳給接收圖片的數據
+  imgFile = uploadFile.raw!
+
+}
+
+//檔案上傳前的回調
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+  if (rawFile.size / 1024 / 1024 > 2) {
+    ElMessage.error('Avatar picture size can not exceed 2MB!')
+    return false
+  }
+  return true
+}
+
+//獲取文章
+const getArticle = async () => {
   let res = await getArticleApi(id)
-  Object.assign(newsData, res.data)
+  Object.assign(article, res.data)
 }
 
 //返回列表
 const back = () => {
-  router.push("/content/news")
+  // 取得當前路徑並按 '/' 分割為陣列
+  const pathSegments = route.path.split('/').filter(Boolean);
+
+  // 確保有上層路徑可回
+  if (pathSegments.length > 1) {
+    // 移除最後一段路徑
+    pathSegments.pop();
+
+    // 組合回去並加上 `/`
+    const parentPath = '/' + pathSegments.join('/');
+
+    // 導航回上層路徑
+    router.push(parentPath);
+
+  } else {
+    //沒有父路由,返回上一個歷史紀錄
+    router.go(-1)
+  }
 }
 
+
 //送出表單
-const submitNewsForm = (form: FormInstance) => {
+const submitArticleForm = (form: FormInstance) => {
   //沒有抓到的這個Dom直接返回
   if (!form) return
   form.validate(async (valid) => {
     if (valid) {
       //獲取儲存在localStorage的臨時上傳檔案URL路徑
       let tempUploadUrlStr = localStorage.getItem(scope.value)
-      //定義變量預設為null
+      //定義變量預設為[]
       let tempUploadUrlList: any[] = [];
 
       //如果上傳檔案URL路徑不為null,則根據逗號分隔
       if (tempUploadUrlStr !== null) {
         tempUploadUrlList = tempUploadUrlStr.split(",");
       }
-      //賦予進newData響應式對象中
-      newsData.tempUploadUrl = tempUploadUrlList
-      console.log(newsData)
+      //賦予進article響應式對象中
+      article.tempUploadUrl = tempUploadUrlList
 
-      let formData = new FormData()
+      let formData = new FormData();
       // 將響應式對象轉換為普通對象，然後轉換為 JSON 字符串
-      const jsonData = JSON.stringify(newsData)
+      const jsonData = JSON.stringify(article)
       formData.append('data', new Blob([jsonData], { type: "application/json" }))
       formData.append('file', imgFile)
+
 
       try {
         //呼叫更新API
         await updateArticleApi(formData)
         //移除臨時上傳檔案URL
         localStorage.removeItem(scope.value)
+        //重製上傳的檔案
+        imgFile = <UploadRawFile>{}
         //保存後返回列表
-        router.push("/content/news")
+        back()
 
         ElMessage.success("儲存成功")
       } catch (err) {
@@ -157,31 +235,72 @@ const submitNewsForm = (form: FormInstance) => {
   })
 }
 
-//頁面掛載時執行
-onMounted(() => {
-  getNews()
-})
 
+onMounted(async () => {
+  await getArticle()
+  imageUrl.value = protocol + '//' + hostname + '/minio' + article.coverThumbnailUrl
+})
 
 </script>
 
+
+
+
 <style scoped lang="scss">
-.news-item-section {
+.article-item-section {
   width: 90%;
   margin: 1% auto;
 
-  .news-card-box {
+  .article-item-card-box {
     min-height: 80vh;
 
-    .news-form {
+    .article-form {
       margin-bottom: 1%;
-      // .el-input {
-      //   --el-input-width: 150px;
-      // }
 
-      // .el-input__inner {
-      //   --el-input-width: 150px;
-      // }
+      .outer-input-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .text-input-box {
+          width: 60%;
+        }
+
+        .img-box {
+          margin-left: -5%
+        }
+      }
+
+      .el-icon.avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        text-align: center;
+      }
+
+      .thumbnail-uploader {
+        .avatar {
+          width: 100%;
+          max-width: 178px;
+          display: block;
+        }
+
+        :deep(.el-upload) {
+          border: 1px dashed var(--el-border-color);
+          border-radius: 6px;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          transition: var(--el-transition-duration-fast);
+        }
+
+        .el-upload:hover {
+          border-color: var(--el-color-primary);
+        }
+
+      }
+
     }
   }
 }
