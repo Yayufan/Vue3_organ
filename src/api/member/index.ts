@@ -6,7 +6,7 @@ import { AxiosPromise } from "axios";
  * @param id 
  * @returns 
  */
-export function getMemberApi(id): AxiosPromise {
+export function getMemberApi(id: number): AxiosPromise {
   return request({
     url: `/member/${id}`,
     method: "get",
@@ -31,7 +31,7 @@ export function getAllMemberApi(): AxiosPromise {
  * @param size 
  * @returns 
  */
-export function getMemberByPaginationApi(page, size): AxiosPromise {
+export function getMemberByPaginationApi(page: number, size: number): AxiosPromise {
   return request({
     url: "/member/pagination",
     method: "get",
@@ -49,7 +49,7 @@ export function getMemberByPaginationApi(page, size): AxiosPromise {
  * @param status
  * @returns 
  */
-export function getMemberByPaginationByStatusApi(page, size, status): AxiosPromise {
+export function getMemberByPaginationByStatusApi(page: number, size: number, status: string): AxiosPromise {
   return request({
     url: "/member/pagination-by-status",
     method: "get",
@@ -95,7 +95,7 @@ export function getMemberCountByStatusApi(status: string): AxiosPromise {
  * @param data 
  * @returns 
  */
-export function addMemberApi(data): AxiosPromise {
+export function addMemberApi(data: any): AxiosPromise {
   return request({
     url: "/member",
     method: "post",
@@ -108,7 +108,7 @@ export function addMemberApi(data): AxiosPromise {
  * @param data 
  * @returns 
  */
-export function updateMemberApi(data): AxiosPromise {
+export function updateMemberApi(data: any): AxiosPromise {
   return request({
     url: "/member",
     method: "put",
@@ -121,7 +121,7 @@ export function updateMemberApi(data): AxiosPromise {
  * @param data 
  * @returns 
  */
-export function batchUpdateMemberApi(data): AxiosPromise {
+export function batchUpdateMemberApi(data: any): AxiosPromise {
   return request({
     url: "/member/batch",
     method: "put",
@@ -135,7 +135,7 @@ export function batchUpdateMemberApi(data): AxiosPromise {
  * @param id 
  * @returns 
  */
-export function deleteMemberApi(id): AxiosPromise {
+export function deleteMemberApi(id: number): AxiosPromise {
   return request({
     url: `/member/${id}`,
     method: "delete",
@@ -147,7 +147,7 @@ export function deleteMemberApi(id): AxiosPromise {
  * @param id 
  * @returns 
  */
-export function batchDeleteMemberApi(data): AxiosPromise {
+export function batchDeleteMemberApi(data: any): AxiosPromise {
   return request({
     url: `/member`,
     method: "delete",

@@ -6,7 +6,7 @@ import { AxiosPromise } from "axios";
  * @param id 
  * @returns 
  */
-export function getOrganDonationConsentApi(id): AxiosPromise {
+export function getOrganDonationConsentApi(id: number): AxiosPromise {
   return request({
     url: `/organ-donation-consent/${id}`,
     method: "get",
@@ -31,7 +31,7 @@ export function getAllOrganDonationConsentApi(): AxiosPromise {
  * @param size 
  * @returns 
  */
-export function getOrganDonationConsentByPaginationApi(page, size): AxiosPromise {
+export function getOrganDonationConsentByPaginationApi(page: number, size: number): AxiosPromise {
   return request({
     url: "/organ-donation-consent/pagination",
     method: "get",
@@ -49,7 +49,7 @@ export function getOrganDonationConsentByPaginationApi(page, size): AxiosPromise
  * @param status
  * @returns 
  */
-export function getOrganDonationConsentByPaginationByStatusApi(page, size, status): AxiosPromise {
+export function getOrganDonationConsentByPaginationByStatusApi(page: number, size: number, status: string): AxiosPromise {
   return request({
     url: "/organ-donation-consent/pagination-by-status",
     method: "get",
@@ -95,7 +95,7 @@ export function getOrganDonationConsentCountByStatusApi(status: string): AxiosPr
  * @param data 
  * @returns 
  */
-export function addOrganDonationConsentApi(data): AxiosPromise {
+export function addOrganDonationConsentApi(data: any): AxiosPromise {
   return request({
     url: "/organ-donation-consent",
     method: "post",
@@ -108,7 +108,7 @@ export function addOrganDonationConsentApi(data): AxiosPromise {
  * @param data 
  * @returns 
  */
-export function updateOrganDonationConsentApi(data): AxiosPromise {
+export function updateOrganDonationConsentApi(data: any): AxiosPromise {
   return request({
     url: "/organ-donation-consent",
     method: "put",
@@ -121,7 +121,7 @@ export function updateOrganDonationConsentApi(data): AxiosPromise {
  * @param data 
  * @returns 
  */
-export function batchUpdateOrganDonationConsentApi(data): AxiosPromise {
+export function batchUpdateOrganDonationConsentApi(data: any): AxiosPromise {
   return request({
     url: "/organ-donation-consent/batch",
     method: "put",

@@ -61,7 +61,7 @@
 import { ref, reactive } from 'vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { getMemberApi, getMemberByPaginationApi, getMemberByPaginationByStatusApi, addMemberApi, updateMemberApi, batchUpdateMemberApi, deleteMemberApi, batchDeleteMemberApi } from '@/api/member'
+import { getOrganDonationConsentApi, getOrganDonationConsentByPaginationApi, getOrganDonationConsentByPaginationByStatusApi, addOrganDonationConsentApi, updateOrganDonationConsentApi, batchUpdateOrganDonationConsentApi } from '@/api/organDonationConsent'
 
 
 //獲取路由
@@ -90,15 +90,15 @@ let memberList = reactive<Record<string, any>>({
   }]
 })
 
-const getMember = async (page: number, size: number) => {
-  let res = await getMemberByPaginationByStatusApi(page, size, "0")
+const getOrganDonationConsent = async (page: number, size: number) => {
+  let res = await getOrganDonationConsentByPaginationByStatusApi(page, size, "0")
   Object.assign(memberList, res.data)
 }
 
 
 //監聽當前頁數的變化,如果有更動就call API 獲取數組數據
 watch(currentPage, (value, oldValue) => {
-  getMember(value, 10)
+  getOrganDonationConsent(value, 10)
 })
 
 /** --------- 審核通過/駁回 相關variable及function -------------- */
@@ -123,9 +123,9 @@ const failedRow = (id: number): void => {
   }).then(async () => {
     // 用户選擇確認，繼續操作
     console.log(id)
-    await deleteMemberApi(id)
+    await updateOrganDonationConsentApi(id)
     ElMessage.success('刪除成功');
-    getMember(1, 10)
+    getOrganDonationConsent(1, 10)
   }).catch((err) => {
     console.log(err)
   });
@@ -141,9 +141,9 @@ const failedList = () => {
     }).then(async () => {
       //提取idList
       let deleteIdList = selectList.map((item: { memberId: string }) => item.memberId)
-      await batchDeleteMemberApi(deleteIdList)
+      await batchUpdateOrganDonationConsentApi(deleteIdList)
       ElMessage.success('批量刪除成功');
-      getMember(1, 10)
+      getOrganDonationConsent(1, 10)
     }).catch((err) => {
       console.log(err)
     })
@@ -168,9 +168,9 @@ const approvalRow = async (member: any) => {
   updateMember.status = "1"
   try {
 
-    await updateMemberApi(updateMember)
+    await updateOrganDonationConsentApi(updateMember)
     ElMessage.success("審核通過")
-    getMember(currentPage.value, 10)
+    getOrganDonationConsent(currentPage.value, 10)
 
   } catch (err) {
     console.log(err)
@@ -186,10 +186,10 @@ const approvalList = async () => {
     })
 
     try {
-      await batchUpdateMemberApi(transData)
+      await batchUpdateOrganDonationConsentApi(transData)
 
       ElMessage.success("批量審核通過")
-      getMember(currentPage.value, 10)
+      getOrganDonationConsent(currentPage.value, 10)
 
     } catch (err) {
       console.log(err)
@@ -203,7 +203,7 @@ const approvalList = async () => {
 /**-------------------掛載頁面時執行-------------------- */
 
 onMounted(() => {
-  getMember(1, 10)
+  getOrganDonationConsent(1, 10)
 })
 
 
