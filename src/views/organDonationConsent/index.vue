@@ -103,7 +103,7 @@
       <el-drawer v-model="drawer" title="I am the title">
 
         <template #header>
-          <h4>會員資料修改</h4>
+          <h4>資料修改</h4>
         </template>
 
 

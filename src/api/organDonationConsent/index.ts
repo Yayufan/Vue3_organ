@@ -43,20 +43,22 @@ export function getOrganDonationConsentByPaginationApi(page: number, size: numbe
 }
 
 /**
- * 根據狀態，獲取符合的器捐同意書(分頁)
+ * 根據狀態，以及搜尋條件，獲取符合的器捐同意書(分頁)
  * @param page 
  * @param size 
  * @param status
+ * @param queryText (可以不填)
  * @returns 
  */
-export function getOrganDonationConsentByPaginationByStatusApi(page: number, size: number, status: string): AxiosPromise {
+export function getOrganDonationConsentByPaginationByStatusApi(page: number, size: number, status: string, queryText?: string): AxiosPromise {
   return request({
     url: "/organ-donation-consent/pagination-by-status",
     method: "get",
     params: {
       page,
       size,
-      status
+      status,
+      queryText
     }
   });
 }
