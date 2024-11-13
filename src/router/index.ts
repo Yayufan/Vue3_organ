@@ -92,12 +92,12 @@ export const constantRoutes: RouteRecordRaw[] = [
 
   //這個預計當作器捐線上簽屬的審核
   {
-    path: "/member",
+    path: "/organ-donation-consent",
     component: Layout,
-    name: "Member", // 用于 keep-alive, 必须与SFC自动推导或者显示声明的组件name一致
+    name: "organDonationConsent", // 用于 keep-alive, 必须与SFC自动推导或者显示声明的组件name一致
     // https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
     meta: {
-      title: "會員管理",
+      title: "器捐同意書",
       icon: "el-icon-Avatar",
       //affix: true,
       keepAlive: true,
@@ -106,10 +106,10 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        component: () => import("@/views/member/index.vue"),
-        name: "MemberPage",
+        component: () => import("@/views/organDonationConsent/index.vue"),
+        name: "organDonationConsentPage",
         meta: {
-          title: "會員管理",
+          title: "同意書列表",
           icon: "el-icon-Avatar",
           hidden: false,
           roles: ["ADMIN"],
@@ -119,10 +119,10 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "review",
-        component: () => import("@/views/member/review.vue"),
-        name: "MemberReview",
+        component: () => import("@/views/organDonationConsent/review.vue"),
+        name: "organDonationConsentReview",
         meta: {
-          title: "會員審核",
+          title: "同意書審核",
           icon: "el-icon-Finished",
           hidden: false,
           roles: ["ADMIN"],
