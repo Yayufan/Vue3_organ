@@ -1,8 +1,8 @@
 <!--  -->
 <template>
 
-  <section class="member-section">
-    <el-card class="member-card">
+  <section class="organ-donation-consent-section">
+    <el-card class="organ-donation-consent-card">
       <h1>器捐同意書管理</h1>
 
       <!-- 如果要用兩種註冊方式再考慮使用這個 -->
@@ -20,15 +20,16 @@
         </el-button>
       </div>
 
-      <el-table class="member-table" :data="memberList.records" @selection-change="handleSelectionChange">
+      <el-table class="organ-donation-consent-table" :data="organDonationConsentList.records"
+        @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column fixed prop="name" label="姓名" width="90" />
-        <el-table-column prop="email" label="信箱" min-width="150" />
-        <el-table-column prop="department" label="院所" min-width="150" />
-        <el-table-column prop="jobTitle" label="職稱" width="120" />
-        <el-table-column prop="phone" label="手機" width="120" />
-
-
+        <el-table-column fixed prop="name" label="簽署人" width="90" />
+        <el-table-column prop="phoneNumber" label="手機" width="120" />
+        <el-table-column prop="birthday" label="生日" width="120" />
+        <el-table-column prop="idCard" label="身份證字號" width="110" />
+        <el-table-column prop="legalRepresentativeName" label="法定代理人" width="100" />
+        <el-table-column prop="legalRepresentativeIdCard" label="法定代理人身份證字號" min-width="90" />
+        <el-table-column prop="signatureDate" label="簽署日期" width="120" />
 
         <el-table-column fixed="right" label="操作" width="120">
           <!-- 透過#default="scope" , 獲取到當前的對象值 , scope.row則是拿到當前那個row的數據  -->
@@ -48,8 +49,9 @@
       current-page當前頁數,官方建議使用v-model與current-page去與自己設定的變量做綁定,
     -->
       <div class="example-pagination-block member-pagination">
-        <el-pagination layout="prev, pager, next" :page-count="Number(memberList.pages)"
-          :default-page-size="Number(memberList.size)" v-model:current-page="currentPage" :hide-on-single-page="true" />
+        <el-pagination layout="prev, pager, next" :page-count="Number(organDonationConsentList.pages)"
+          :default-page-size="Number(organDonationConsentList.size)" v-model:current-page="currentPage"
+          :hide-on-single-page="true" />
       </div>
 
 
@@ -57,7 +59,7 @@
       <!-- 新增對話框 -->
       <ElDialog v-model="dialogFormVisible" title="新增會員" width="500">
 
-        <el-form :model="insertMemberFormData" ref="form" :rules="insertMemberRules">
+        <el-form :model="insertMemberFormData" ref="form" :rules="insertOrganDonationConsentRules">
 
           <el-form-item label="Email" :label-width="formLabelWidth" prop="email">
             <el-input v-model="insertMemberFormData.email" autocomplete="off" />
@@ -83,7 +85,6 @@
             <el-input v-model="insertMemberFormData.phone" autocomplete="off" />
           </el-form-item>
 
-
         </el-form>
 
         <template #footer>
@@ -108,23 +109,53 @@
 
 
         <template #default>
-          <el-form label-position="top" label-width="auto" :model="updateMemberForm" :rules="updateMemberFormRules"
-            ref="updateMemberFormRef">
-            <el-form-item label="E-mail" prop="email">
-              <el-input v-model="updateMemberForm.email" />
-            </el-form-item>
+          <el-form label-position="top" label-width="auto" :model="updateOrganDonationConsentForm"
+            :rules="updateOrganDonationConsentFormRules" ref="updateOrganDonationConsentFormRef">
+
             <el-form-item label="姓名" prop="name">
-              <el-input v-model="updateMemberForm.name" />
+              <el-input v-model="updateOrganDonationConsentForm.name" />
             </el-form-item>
-            <el-form-item label="院所" prop="department">
-              <el-input v-model="updateMemberForm.department" />
+
+            <el-form-item label="備註" prop="remark">
+              <el-input v-model="updateOrganDonationConsentForm.remark" type="textarea" :rows="3" />
             </el-form-item>
-            <el-form-item label="職稱" prop="jobTitle">
-              <el-input v-model="updateMemberForm.jobTitle" />
+
+
+            <el-form-item label="身份證字號" prop="idCard">
+              <el-input v-model="updateOrganDonationConsentForm.idCard" />
             </el-form-item>
-            <el-form-item label="聯絡電話" prop="phone">
-              <el-input v-model="updateMemberForm.phone" />
+            <el-form-item label="生日" prop="birthday">
+              <el-input v-model="updateOrganDonationConsentForm.birthday" />
             </el-form-item>
+
+            <el-form-item label="連絡電話" prop="contactNumber">
+              <el-input v-model="updateOrganDonationConsentForm.contactNumber" />
+            </el-form-item>
+            <el-form-item label="手機號碼" prop="phoneNumber">
+              <el-input v-model="updateOrganDonationConsentForm.phoneNumber" />
+            </el-form-item>
+            <el-form-item label="地址" prop="address">
+              <el-input v-model="updateOrganDonationConsentForm.address" />
+            </el-form-item>
+
+            <el-form-item label="簽署日期" prop="birthday">
+              <el-input v-model="updateOrganDonationConsentForm.signatureDate" />
+            </el-form-item>
+            <el-form-item label="法定代理人姓名" prop="legalRepresentativeName">
+              <el-input v-model="updateOrganDonationConsentForm.legalRepresentativeName" />
+            </el-form-item>
+            <el-form-item label="法定代理人身份證" prop="legalRepresentativeIdCard">
+              <el-input v-model="updateOrganDonationConsentForm.legalRepresentativeIdCard" />
+            </el-form-item>
+
+
+
+
+            <el-form-item label="法定代理人身份證" prop="legalRepresentativeIdCard">
+              <el-input v-model="updateOrganDonationConsentForm.legalRepresentativeIdCard" />
+            </el-form-item>
+
+
           </el-form>
         </template>
 
@@ -136,12 +167,7 @@
           </div>
         </template>
 
-
       </el-drawer>
-
-
-
-
     </el-card>
 
   </section>
@@ -153,7 +179,9 @@
 import { ref, reactive } from 'vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { getMemberApi, getMemberByPaginationApi, getMemberByPaginationByStatusApi, addMemberApi, updateMemberApi, deleteMemberApi, batchDeleteMemberApi } from '@/api/member'
+
+import { getOrganDonationConsentCountByStatusApi, getOrganDonationConsentByPaginationByStatusApi, updateOrganDonationConsentApi, batchUpdateOrganDonationConsentApi } from '@/api/organDonationConsent'
+
 
 //獲取路由
 const route = useRoute()
@@ -164,8 +192,18 @@ const formLabelWidth = '140px'
 
 
 /**--------------顯示數據相關---------------------------- */
-//最新消息List
-let memberList = reactive<Record<string, any>>({
+//獲取未審核的同意書List
+let organDonationConsentList = reactive<Record<string, any>>({
+  records: [{
+    name: '',
+    phoneNumber: '',
+    birthday: '',
+    idCard: '',
+    legalRepresentativeName: '',
+    legalRepresentativeIdCard: '',
+    signatureDate: ''
+
+  }]
 })
 
 //設定分頁組件,currentPage當前頁數
@@ -173,8 +211,8 @@ let currentPage = ref(1)
 
 
 const getMember = async (page: number, size: number) => {
-  let res = await getMemberByPaginationByStatusApi(page, size, "1")
-  Object.assign(memberList, res.data)
+  let res = await getOrganDonationConsentByPaginationByStatusApi(page, size, "1")
+  Object.assign(organDonationConsentList, res.data)
 }
 
 
@@ -204,7 +242,7 @@ const deleteRow = (id: number): void => {
     type: 'warning'
   }).then(async () => {
     // 用户選擇確認，繼續操作
-    await deleteMemberApi(id)
+    // await deleteMemberApi(id)
     getMember(currentPage.value, 10)
 
     ElMessage.success('刪除成功');
@@ -224,7 +262,7 @@ const deleteList = () => {
       //確定刪除後使用父組件傳來的function
       //提取idList
       let deleteIdList = deleteSelectList.map((item: { memberId: string }) => item.memberId)
-      await batchDeleteMemberApi(deleteIdList)
+      // await batchDeleteMemberApi(deleteIdList)
       getMember(currentPage.value, 10)
       ElMessage.success('刪除成功');
     }).catch((err) => {
@@ -255,7 +293,7 @@ const insertMemberFormData = reactive({
 })
 
 //表單校驗規則
-const insertMemberRules = reactive<FormRules>({
+const insertOrganDonationConsentRules = reactive<FormRules>({
   email: [
     {
       required: true,
@@ -319,7 +357,7 @@ const submitInsertForm = (form: FormInstance | undefined) => {
     if (valid) {
       try {
         //呼叫父組件給的新增function API
-        await addMemberApi(insertMemberFormData)
+        // await addMemberApi(insertMemberFormData)
         ElMessage.success('新增成功');
         getMember(currentPage.value, 10)
 
@@ -347,57 +385,80 @@ const cancelClick = () => {
 }
 
 //編輯的表單元素本身
-const updateMemberFormRef = ref()
+const updateOrganDonationConsentFormRef = ref()
 
 //編輯的表單內容
-let updateMemberForm = reactive({
-  email: '',
-  name: '',
-  department: '',
-  jobTitle: '',
-  phone: '',
-
+let updateOrganDonationConsentForm = reactive({
+  "name": "",
+  "idCard": "",
+  "birthday": "",
+  "contactNumber": "",
+  "phoneNumber": "",
+  "email": "",
+  "address": "",
+  "legalRepresentativeName": "",
+  "legalRepresentativeIdCard": "",
+  "consentCard": "",
+  "consentCardNumber": "",
+  "reason": "",
+  "wordToFamily": "",
+  "donateOrgans": "" as string | string[],
+  "remark": "",
+  "healthInsuranceCardAnnotation": "",
+  "healthInsuranceCardAnnotationDate": "",
+  "signatureDate": "",
+  "status": "",
 })
 
 //編輯表單的校驗規則
-const updateMemberFormRules = reactive<FormRules>({
-  email: [
-    {
-      required: true,
-      message: 'E-mail不能為空',
-      trigger: 'change',
-    },
-    {
-      type: 'email',
-      message: '請輸入正確的E-mail格式',
-      trigger: 'change'
-    },
-  ],
+const updateOrganDonationConsentFormRules = reactive<FormRules>({
   name: [
     {
       required: true,
       message: '姓名不能為空',
       trigger: 'change',
-    }
+    },
+
   ],
-  department: [
+  phoneNumber: [
     {
       required: true,
-      message: '院所不能為空',
+      message: '手機號碼不能為空',
       trigger: 'change',
     }
   ],
-  jobTitle: [
+  birthday: [
     {
       required: true,
-      message: '職稱不能為空',
+      message: '生日不能為空',
       trigger: 'change',
     }
   ],
-  phone: [
+  idCard: [
     {
       required: true,
-      message: '電話不能為空',
+      message: '身份證字號不能為空',
+      trigger: 'change',
+    }
+  ],
+  legalRepresentativeName: [
+    {
+      required: true,
+      message: '法定代理人姓名不能為空',
+      trigger: 'change',
+    },
+  ],
+  legalRepresentativeIdCard: [
+    {
+      required: true,
+      message: '法定代理人身份證不能為空',
+      trigger: 'change',
+    },
+  ],
+  signatureDate: [
+    {
+      required: true,
+      message: '法定代理人身份證不能為空',
       trigger: 'change',
     },
   ],
@@ -407,10 +468,10 @@ const updateMemberFormRules = reactive<FormRules>({
 //drawer內,確認按鈕
 const confirmClick = async () => {
   //沒有抓到的這個Dom直接返回
-  updateMemberFormRef.value.validate(async (valid: boolean) => {
+  updateOrganDonationConsentFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
 
-      await updateMemberApi(updateMemberForm)
+      // await updateMemberApi(updateOrganDonationConsentForm)
       drawer.value = false
       ElMessage.success("修改完成")
       await getMember(currentPage.value, 10)
@@ -423,8 +484,12 @@ const confirmClick = async () => {
 }
 
 //編輯會員資料按鈕
-const editRow = (member: any): void => {
-  Object.assign(updateMemberForm, member)
+const editRow = (organDonationConsent: any): void => {
+  Object.assign(updateOrganDonationConsentForm, organDonationConsent)
+  if (typeof updateOrganDonationConsentForm.donateOrgans === "string") {
+    updateOrganDonationConsentForm.donateOrgans = updateOrganDonationConsentForm.donateOrgans.split(",")
+  }
+  console.log(updateOrganDonationConsentForm)
   drawer.value = true
 }
 
@@ -441,11 +506,11 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.member-section {
+.organ-donation-consent-section {
   width: 95%;
   margin: 0 auto;
 
-  .member-card {
+  .organ-donation-consent-card {
     margin-top: 2%;
     margin-bottom: 2%;
   }
@@ -465,7 +530,7 @@ onMounted(() => {
   margin-bottom: 1%;
 }
 
-.member-table {
+.organ-donation-consent-table {
   width: 100%;
   height: auto;
 }
