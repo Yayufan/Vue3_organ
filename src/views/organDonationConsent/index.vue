@@ -339,13 +339,6 @@ let currentPage = ref(1)
 
 const getOrganDonationConsent = async (page: number, size: number) => {
 
-  if (filterStatus.value === '') {
-    let res = await getOrganDonationConsentByPaginationApi(page, size)
-    console.log('當前篩選狀態', filterStatus.value)
-    Object.assign(organDonationConsentList, res.data)
-    return
-  }
-
   let res = await getOrganDonationConsentByPaginationByStatusApi(page, size, filterStatus.value, input.value)
   console.log('當前篩選狀態', filterStatus.value)
   Object.assign(organDonationConsentList, res.data)
