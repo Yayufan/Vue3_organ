@@ -7,17 +7,49 @@
 
       <!-- 如果要用兩種註冊方式再考慮使用這個 -->
       <div class="function-bar">
-        <el-button type="primary" @click="toggleAddDialog">
-          新增<el-icon class="el-icon--right">
-            <Plus />
-          </el-icon>
-        </el-button>
+        <div class="display-count">
+          <div class="total-count">總數量為： {{ organDonationConsentCount }} 篇</div>
+          <div>當前查詢數量為： {{ organDonationConsentList.total }} 篇</div>
+        </div>
 
-        <el-button type="danger" @click="deleteList" :disabled="deleteSelectList.length > 0 ? false : true">
-          刪除<el-icon class="el-icon--right">
-            <Delete />
-          </el-icon>
-        </el-button>
+        <div class="btn-box">
+          <el-button type="primary" @click="toggleAddDialog">
+            新增<el-icon class="el-icon--right">
+              <Plus />
+            </el-icon>
+          </el-button>
+
+          <el-button type="danger" @click="deleteList" :disabled="deleteSelectList.length > 0 ? false : true">
+            刪除<el-icon class="el-icon--right">
+              <Delete />
+            </el-icon>
+          </el-button>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <el-input v-model="input" style="width: 240px" placeholder="輸入內容,Enter查詢"
+          @keydown.enter="getOrganDonationConsent(currentPage, 10)" />
+
+        <el-select v-model="filterStatus" style="width: 240px;" class="filter-status">
+          <el-option label="全選" value="">
+            <span>全選</span>
+          </el-option>
+          <el-option label="未審核" value="0">
+            <span>未審核</span>
+          </el-option>
+          <el-option label="審核通過" value="1">
+            <span style="color:green;">審核通過</span>
+          </el-option>
+          <el-option label="撤銷簽署" value="-1">
+            <span style="color:red;">撤銷簽署</span>
+          </el-option>
+
+          <template #label="{ label, value }">
+            <span :style="{ color: value == '1' ? 'green' : value == '-1' ? 'red' : 'black' }">{{ label }}</span>
+          </template>
+        </el-select>
+
       </div>
 
       <el-table class="organ-donation-consent-table" :data="organDonationConsentList.records"
@@ -33,7 +65,7 @@
         <el-table-column prop="status" label="審核狀態" min-width="120">
           <template #default="scope">
             <span v-if="scope.row.status == '1'" style="color: green;">審核通過</span>
-            <span v-else-if="scope.row.status == '-1'" style="color: green;">撤銷簽署</span>
+            <span v-else-if="scope.row.status == '-1'" style="color: red;">撤銷簽署</span>
             <span v-else>未審核</span>
           </template>
         </el-table-column>
@@ -45,7 +77,7 @@
             <el-button link type="primary" size="small" @click="editRow(scope.row)">
               Edit
             </el-button>
-            <el-button link type="danger" size="small" @click="deleteRow(scope.row.memberId)">
+            <el-button link type="danger" size="small" @click="deleteRow(scope.row.organDonationConsentId)">
               Delete</el-button>
           </template>
         </el-table-column>
@@ -260,8 +292,7 @@ import { ref, reactive } from 'vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 
-import { getOrganDonationConsentCountByStatusApi, getOrganDonationConsentByPaginationByStatusApi, updateOrganDonationConsentApi, batchUpdateOrganDonationConsentApi } from '@/api/organDonationConsent'
-
+import { getOrganDonationConsentCountApi, getOrganDonationConsentByPaginationApi, getOrganDonationConsentByPaginationByStatusApi, updateOrganDonationConsentApi, deleteOrganDonationConsentApi, batchDeleteOrganDonationConsentApi } from '@/api/organDonationConsent'
 
 //獲取路由
 const route = useRoute()
@@ -270,8 +301,24 @@ const router = useRouter()
 //formLabel 寬度
 const formLabelWidth = '140px'
 
+//查詢內容
+let input = ref('')
+
+//篩選審核狀態,預設找已經過審的
+let filterStatus = ref('')
+
+//獲取同意書總數
+let organDonationConsentCount = ref(0)
+
 
 /**--------------顯示數據相關---------------------------- */
+
+const getOrganDonationConsentCount = async () => {
+  let res = await getOrganDonationConsentCountApi()
+  organDonationConsentCount.value = res.data
+}
+
+
 //獲取未審核的同意書List
 let organDonationConsentList = reactive<Record<string, any>>({
   records: [{
@@ -290,17 +337,29 @@ let organDonationConsentList = reactive<Record<string, any>>({
 let currentPage = ref(1)
 
 
-const getMember = async (page: number, size: number) => {
-  let res = await getOrganDonationConsentByPaginationByStatusApi(page, size, "1")
+const getOrganDonationConsent = async (page: number, size: number) => {
+
+  if (filterStatus.value === '') {
+    let res = await getOrganDonationConsentByPaginationApi(page, size)
+    console.log('當前篩選狀態', filterStatus.value)
+    Object.assign(organDonationConsentList, res.data)
+    return
+  }
+
+  let res = await getOrganDonationConsentByPaginationByStatusApi(page, size, filterStatus.value, input.value)
+  console.log('當前篩選狀態', filterStatus.value)
   Object.assign(organDonationConsentList, res.data)
 }
 
 
 //監聽當前頁數的變化,如果有更動就call API 獲取數組數據
 watch(currentPage, (value, oldValue) => {
-  getMember(value, 10)
+  getOrganDonationConsent(value, 10)
 })
 
+watch(filterStatus, (value, oldValue) => {
+  getOrganDonationConsent(currentPage.value, 10)
+})
 
 /** --------- 刪除相關variable及function -------------- */
 
@@ -314,7 +373,7 @@ const handleSelectionChange = (val: any) => {
   Object.assign(deleteSelectList, val)
 }
 
-//刪除最新消息
+//刪除同意書
 const deleteRow = (id: number): void => {
   ElMessageBox.confirm(`確定要刪除此資料嗎？`, '確認刪除', {
     confirmButtonText: '確定',
@@ -322,8 +381,8 @@ const deleteRow = (id: number): void => {
     type: 'warning'
   }).then(async () => {
     // 用户選擇確認，繼續操作
-    // await deleteMemberApi(id)
-    getMember(currentPage.value, 10)
+    await deleteOrganDonationConsentApi(id)
+    getOrganDonationConsent(currentPage.value, 10)
 
     ElMessage.success('刪除成功');
   }).catch((err) => {
@@ -331,19 +390,19 @@ const deleteRow = (id: number): void => {
   });
 }
 
-//批量刪除最新消息的function
+//批量刪除同意書的function
 const deleteList = () => {
   if (deleteSelectList.length >= 1) {
-    ElMessageBox.confirm(`確定要刪除這${deleteSelectList.length}個消息嗎？`, '確認刪除', {
+    ElMessageBox.confirm(`確定要刪除這${deleteSelectList.length}個同意書嗎？`, '確認刪除', {
       confirmButtonText: '確定',
       cancelButtonText: '取消',
       type: 'warning'
     }).then(async () => {
       //確定刪除後使用父組件傳來的function
       //提取idList
-      let deleteIdList = deleteSelectList.map((item: { memberId: string }) => item.memberId)
-      // await batchDeleteMemberApi(deleteIdList)
-      getMember(currentPage.value, 10)
+      let deleteIdList = deleteSelectList.map((item: { organDonationConsentId: string }) => item.organDonationConsentId)
+      await batchDeleteOrganDonationConsentApi(deleteIdList)
+      getOrganDonationConsent(currentPage.value, 10)
       ElMessage.success('刪除成功');
     }).catch((err) => {
       console.log(err)
@@ -439,7 +498,7 @@ const submitInsertForm = (form: FormInstance | undefined) => {
         //呼叫父組件給的新增function API
         // await addMemberApi(insertMemberFormData)
         ElMessage.success('新增成功');
-        getMember(currentPage.value, 10)
+        getOrganDonationConsent(currentPage.value, 10)
 
       } catch (err: any) {
         console.log(err)
@@ -584,7 +643,6 @@ const updateOrganDonationConsentFormRules = reactive<FormRules>({
     },
   ],
 
-
 })
 
 //drawer內,確認按鈕
@@ -593,10 +651,11 @@ const confirmClick = async () => {
   updateOrganDonationConsentFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
 
-      // await updateMemberApi(updateOrganDonationConsentForm)
+      await updateOrganDonationConsentApi(updateOrganDonationConsentForm)
       drawer.value = false
       ElMessage.success("修改完成")
-      await getMember(currentPage.value, 10)
+      await getOrganDonationConsent(currentPage.value, 10)
+
 
     } else {
       ElMessage.error("請完整填入資訊")
@@ -619,7 +678,8 @@ const editRow = (organDonationConsent: any): void => {
 /**-------------------掛載頁面時執行-------------------- */
 
 onMounted(() => {
-  getMember(1, 10)
+  getOrganDonationConsent(1, 10)
+  getOrganDonationConsentCount()
 })
 
 
@@ -648,9 +708,21 @@ onMounted(() => {
 
 
 .function-bar {
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1%;
+
+  .total-count {
+    font-weight: 600;
+  }
+
 }
+
+.filter-status {
+  margin-left: 10px;
+}
+
 
 .organ-donation-consent-table {
   width: 100%;

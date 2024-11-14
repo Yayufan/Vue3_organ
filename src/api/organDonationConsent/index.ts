@@ -132,6 +132,32 @@ export function batchUpdateOrganDonationConsentApi(data: any): AxiosPromise {
 }
 
 
+/**
+ * 刪除單一會員
+ * @param id 
+ * @returns 
+ */
+export function deleteOrganDonationConsentApi(id: number): AxiosPromise {
+  return request({
+    url: `/organ-donation-consent/${id}`,
+    method: "delete",
+  });
+}
+
+/**
+ * 批量刪除會員
+ * @param data 
+ * @returns 
+ */
+export function batchDeleteOrganDonationConsentApi(data: any): AxiosPromise {
+  return request({
+    url: `/organ-donation-consent`,
+    method: "delete",
+    data
+  });
+}
+
+
 
 
 
