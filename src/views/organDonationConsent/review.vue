@@ -17,7 +17,7 @@
           </el-button>
 
           <el-button type="danger" @click="failedList" :disabled="selectList.length > 0 ? false : true">
-            批量否決<el-icon class="el-icon--right">
+            批量廢除<el-icon class="el-icon--right">
               <Delete />
             </el-icon>
           </el-button>
@@ -139,7 +139,7 @@ const handleSelectionChange = (val: any) => {
 
 //駁回同意書申請
 const failedRow = (organDonationConsent: any): void => {
-  ElMessageBox.confirm(`確定要駁回此申請嗎？`, '確認駁回', {
+  ElMessageBox.confirm(`確定要廢除此簽署申請嗎？`, '確認廢除', {
     confirmButtonText: '確定',
     cancelButtonText: '取消',
     type: 'warning'
@@ -152,7 +152,7 @@ const failedRow = (organDonationConsent: any): void => {
 
     // 用户選擇確認，繼續操作
     await updateOrganDonationConsentApi(updateOrganDonationConsent)
-    ElMessage.success('駁回成功');
+    ElMessage.success('廢除成功');
 
     getOrganDonationConsent(1, 10)
 
@@ -164,7 +164,7 @@ const failedRow = (organDonationConsent: any): void => {
 //批量駁回同意書申請的function
 const failedList = () => {
   if (selectList.length >= 1) {
-    ElMessageBox.confirm(`確定要駁回這${selectList.length}個申請嗎？`, '確認刪除', {
+    ElMessageBox.confirm(`確定要廢除${selectList.length}個簽署申請嗎？`, '確認廢除', {
       confirmButtonText: '確定',
       cancelButtonText: '取消',
       type: 'warning'

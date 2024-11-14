@@ -27,9 +27,17 @@
         <el-table-column prop="phoneNumber" label="手機" width="120" />
         <el-table-column prop="birthday" label="生日" width="120" />
         <el-table-column prop="idCard" label="身份證字號" width="110" />
-        <el-table-column prop="legalRepresentativeName" label="法定代理人" width="100" />
-        <el-table-column prop="legalRepresentativeIdCard" label="法定代理人身份證字號" min-width="90" />
+        <!-- <el-table-column prop="legalRepresentativeName" label="法定代理人" width="100" />
+        <el-table-column prop="legalRepresentativeIdCard" label="法定代理人身份證字號" min-width="90" /> -->
         <el-table-column prop="signatureDate" label="簽署日期" width="120" />
+        <el-table-column prop="status" label="審核狀態" min-width="120">
+          <template #default="scope">
+            <span v-if="scope.row.status == '1'" style="color: green;">審核通過</span>
+            <span v-else-if="scope.row.status == '-1'" style="color: green;">撤銷簽署</span>
+            <span v-else>未審核</span>
+          </template>
+        </el-table-column>
+
 
         <el-table-column fixed="right" label="操作" width="120">
           <!-- 透過#default="scope" , 獲取到當前的對象值 , scope.row則是拿到當前那個row的數據  -->
@@ -100,13 +108,11 @@
 
 
       <!-- 修改時的Drawer -->
-      <!-- 新增/修改時的drawer -->
       <el-drawer v-model="drawer" title="I am the title">
 
         <template #header>
           <h4>資料修改</h4>
         </template>
-
 
         <template #default>
           <el-form label-position="top" label-width="auto" :model="updateOrganDonationConsentForm"
@@ -120,41 +126,115 @@
               <el-input v-model="updateOrganDonationConsentForm.remark" type="textarea" :rows="3" />
             </el-form-item>
 
+            <el-form-item label="願意捐贈器官/組織項目(可複選)" prop="donateOrgans">
+
+              <el-checkbox-group v-model="updateOrganDonationConsentForm.donateOrgans">
+                <div class="checkbox-div">
+                  <el-checkbox label="全部捐贈" value="all"></el-checkbox>
+                  <el-checkbox label="肺臟" value="lung"></el-checkbox>
+                  <el-checkbox label="胰臟" value="pancreas"></el-checkbox>
+                  <el-checkbox label="小腸" value="smallIntestine"></el-checkbox>
+                </div>
+                <div class="checkbox-div">
+                  <el-checkbox label="皮膚" value="skin"></el-checkbox>
+                  <el-checkbox label="心瓣膜" value="heartValve"></el-checkbox>
+                  <el-checkbox label="心臟" value="heart"></el-checkbox>
+                  <el-checkbox label="肝臟" value="liver"></el-checkbox>
+                </div>
+                <div class="checkbox-div">
+                  <el-checkbox label="腎臟" value="kidney"></el-checkbox>
+                  <el-checkbox label="眼角膜" value="cornea"></el-checkbox>
+                  <el-checkbox label="骨骼" value="bones"></el-checkbox>
+                  <el-checkbox label="血管" value="bloodVessels"></el-checkbox>
+                </div>
+              </el-checkbox-group>
+            </el-form-item>
+
+            <el-form-item label="健保卡註記" prop="healthInsuranceCardAnnotation">
+              <el-input v-model="updateOrganDonationConsentForm.healthInsuranceCardAnnotation" />
+            </el-form-item>
+
+            <el-form-item label="健保卡註記日期" prop="healthInsuranceCardAnnotationDate">
+              <el-date-picker v-model="updateOrganDonationConsentForm.healthInsuranceCardAnnotationDate" type="date"
+                value-format="YYYY-MM-DD"></el-date-picker>
+            </el-form-item>
 
             <el-form-item label="身份證字號" prop="idCard">
               <el-input v-model="updateOrganDonationConsentForm.idCard" />
             </el-form-item>
-            <el-form-item label="生日" prop="birthday">
-              <el-input v-model="updateOrganDonationConsentForm.birthday" />
+
+            <el-form-item label="出生日期" prop="birthday">
+              <el-date-picker v-model="updateOrganDonationConsentForm.birthday" type="date"
+                value-format="YYYY-MM-DD"></el-date-picker>
             </el-form-item>
 
             <el-form-item label="連絡電話" prop="contactNumber">
               <el-input v-model="updateOrganDonationConsentForm.contactNumber" />
             </el-form-item>
+
             <el-form-item label="手機號碼" prop="phoneNumber">
               <el-input v-model="updateOrganDonationConsentForm.phoneNumber" />
             </el-form-item>
+
             <el-form-item label="地址" prop="address">
               <el-input v-model="updateOrganDonationConsentForm.address" />
             </el-form-item>
 
-            <el-form-item label="簽署日期" prop="birthday">
-              <el-input v-model="updateOrganDonationConsentForm.signatureDate" />
+            <el-form-item label="E-Mail" prop="email">
+              <el-input v-model="updateOrganDonationConsentForm.email" />
             </el-form-item>
+
+            <el-form-item label="簽署日期" prop="signatureDate">
+              <el-date-picker v-model="updateOrganDonationConsentForm.signatureDate" type="date"
+                value-format="YYYY-MM-DD"></el-date-picker>
+            </el-form-item>
+
             <el-form-item label="法定代理人姓名" prop="legalRepresentativeName">
               <el-input v-model="updateOrganDonationConsentForm.legalRepresentativeName" />
             </el-form-item>
-            <el-form-item label="法定代理人身份證" prop="legalRepresentativeIdCard">
-              <el-input v-model="updateOrganDonationConsentForm.legalRepresentativeIdCard" />
-            </el-form-item>
-
-
-
 
             <el-form-item label="法定代理人身份證" prop="legalRepresentativeIdCard">
               <el-input v-model="updateOrganDonationConsentForm.legalRepresentativeIdCard" />
             </el-form-item>
 
+            <el-form-item label="捐贈理由" prop="reason">
+              <el-input v-model="updateOrganDonationConsentForm.reason" type="textarea" :rows="4" />
+            </el-form-item>
+
+            <el-form-item label="對家人的話" prop="wordToFamily">
+              <el-input v-model="updateOrganDonationConsentForm.wordToFamily" type="textarea" :rows="4" />
+            </el-form-item>
+
+            <el-form-item label="是否需要簽署同意卡" prop="consentCard">
+              <el-radio-group v-model="updateOrganDonationConsentForm.consentCard">
+                <el-radio value="-1">不需要</el-radio>
+                <el-radio value="1">需要</el-radio>
+              </el-radio-group>
+            </el-form-item>
+
+            <el-form-item v-if="updateOrganDonationConsentForm.consentCard == '1'" label="簽署同意卡-卡號"
+              prop="consentCardNumber">
+              <el-input v-model="updateOrganDonationConsentForm.consentCardNumber" />
+            </el-form-item>
+
+            <el-form-item label="審核狀態" prop="status">
+              <el-select v-model="updateOrganDonationConsentForm.status" placeholder="Select" style="width: 240px;">
+                <el-option label="未審核" value="0">
+                  <span>未審核</span>
+                </el-option>
+                <el-option label="審核通過" value="1">
+                  <span style="color:green;">審核通過</span>
+                </el-option>
+                <el-option label="撤銷簽署" value="-1">
+                  <span style="color:red;">撤銷簽署</span>
+                </el-option>
+
+                <template #label="{ label, value }">
+                  <span :style="{ color: value == '1' ? 'green' : value == '-1' ? 'red' : 'black' }">{{ label }}</span>
+                </template>
+              </el-select>
+
+            </el-form-item>
 
           </el-form>
         </template>
@@ -236,7 +316,7 @@ const handleSelectionChange = (val: any) => {
 
 //刪除最新消息
 const deleteRow = (id: number): void => {
-  ElMessageBox.confirm(`確定要刪除此會員嗎？`, '確認刪除', {
+  ElMessageBox.confirm(`確定要刪除此資料嗎？`, '確認刪除', {
     confirmButtonText: '確定',
     cancelButtonText: '取消',
     type: 'warning'
@@ -418,7 +498,32 @@ const updateOrganDonationConsentFormRules = reactive<FormRules>({
       message: '姓名不能為空',
       trigger: 'change',
     },
-
+  ],
+  idCard: [
+    {
+      required: true,
+      message: '身份證字號不能為空',
+      trigger: 'change',
+    },
+  ],
+  birthday: [
+    {
+      required: true,
+      message: '生日不能為空',
+      trigger: 'change',
+    },
+    {
+      type: "date",
+      message: '必須為日期',
+      trigger: 'change',
+    }
+  ],
+  contactNumber: [
+    {
+      required: true,
+      message: '電話號碼不能為空',
+      trigger: 'change',
+    }
   ],
   phoneNumber: [
     {
@@ -427,20 +532,14 @@ const updateOrganDonationConsentFormRules = reactive<FormRules>({
       trigger: 'change',
     }
   ],
-  birthday: [
+  address: [
     {
       required: true,
-      message: '生日不能為空',
+      message: '地址不能為空',
       trigger: 'change',
     }
   ],
-  idCard: [
-    {
-      required: true,
-      message: '身份證字號不能為空',
-      trigger: 'change',
-    }
-  ],
+
   legalRepresentativeName: [
     {
       required: true,
@@ -455,13 +554,36 @@ const updateOrganDonationConsentFormRules = reactive<FormRules>({
       trigger: 'change',
     },
   ],
-  signatureDate: [
+  consentCard: [
     {
       required: true,
-      message: '法定代理人身份證不能為空',
+      message: '是選擇需要簽署同意卡',
       trigger: 'change',
     },
   ],
+  donateOrgans: [
+    {
+      type: 'array',
+      required: true,
+      message: '請至少勾選一個捐贈項目',
+      trigger: 'change',
+    },
+  ],
+  signatureDate: [
+    {
+      required: true,
+      message: '簽署日期不能為空',
+      trigger: 'change',
+    },
+  ],
+  status: [
+    {
+      required: true,
+      message: '請選擇審核狀態',
+      trigger: 'change',
+    },
+  ],
+
 
 })
 
@@ -483,7 +605,7 @@ const confirmClick = async () => {
 
 }
 
-//編輯會員資料按鈕
+//編輯資料按鈕
 const editRow = (organDonationConsent: any): void => {
   Object.assign(updateOrganDonationConsentForm, organDonationConsent)
   if (typeof updateOrganDonationConsentForm.donateOrgans === "string") {
