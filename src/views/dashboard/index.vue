@@ -34,29 +34,29 @@
     <el-row :gutter="20" class="mt-3">
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>總瀏覽人次： </div>
-          <div>0 次</div>
+          <div>文章瀏覽人次： </div>
+          <div>0次</div>
         </el-card>
       </el-col>
 
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>總會員人數： </div>
-          <div>{{ memberCount }} 人</div>
+          <div>器捐同意書總數： </div>
+          <div>{{ organDonationConsentCount }} 人</div>
         </el-card>
       </el-col>
 
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>已審核會員： </div>
-          <div>{{ memberApprovedCount }} 人</div>
+          <div>已審核器捐同意書： </div>
+          <div>{{ organDonationConsentApprovedCount }} 人</div>
         </el-card>
       </el-col>
 
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>未審核會員： </div>
-          <div>{{ memberPendingCount }} 人</div>
+          <div>未審核器捐同意書： </div>
+          <div>{{ organDonationConsentPendingCount }} 人</div>
         </el-card>
       </el-col>
 
@@ -74,59 +74,80 @@
 
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>醫療新知文章： </div>
-          <div>{{ medicalKnowledgeCount }} 篇</div>
+          <div>活動花絮文章： </div>
+          <div>{{ eventHighlightsCount }} 篇</div>
         </el-card>
       </el-col>
 
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>專業醫療文章： </div>
-          <div>{{ professionalMedicalCount }} 篇</div>
+          <div>器捐學堂文章： </div>
+          <div>{{ organDonationCount }} 篇</div>
         </el-card>
       </el-col>
 
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>衛教手術文章： </div>
-          <div>{{ educationSurgeryCount }} 篇</div>
+          <div>捐贈者家屬故事文章： </div>
+          <div>{{ storyDonorFamilyCount }} 篇</div>
         </el-card>
       </el-col>
+
 
     </el-row>
 
-    <!-- 數据卡片- 最新消息及文章瀏覽量 -->
+
     <el-row :gutter="20" class="mt-3">
+
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>最新消息瀏覽數： </div>
-          <div>{{ newsViewsCount }} 次</div>
+          <div>受贈者故事文章： </div>
+          <div>{{ storyRecipientCount }} 篇</div>
         </el-card>
       </el-col>
 
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>醫療新知瀏覽數：</div>
-          <div>{{ medicalKnowledgeViewsCount }} 次</div>
+          <div>影音專區文章： </div>
+          <div>{{ videoAreaCount }} 篇</div>
         </el-card>
       </el-col>
 
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>專業醫療瀏覽數： </div>
-          <div>{{ professionalMedicalViewsCount }} 次</div>
+          <div>白袍心聲文章： </div>
+          <div>{{ doctorVoiceCount }} 篇</div>
         </el-card>
       </el-col>
 
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>衛教手術瀏覽數： </div>
-          <div>{{ educationSurgeryViewsCount }} 次</div>
+          <div>協助資源文章： </div>
+          <div>{{ assistanceResourcesCount }} 篇</div>
+        </el-card>
+      </el-col>
+
+
+    </el-row>
+
+    <el-row :gutter="20" class="mt-3">
+
+
+      <el-col :xs="24" :sm="12" :lg="6">
+        <el-card shadow="never">
+          <div>好書推薦文章： </div>
+          <div>{{ bookRecommendationsCount }} 篇</div>
+        </el-card>
+      </el-col>
+
+      <el-col :xs="24" :sm="12" :lg="6">
+        <el-card shadow="never">
+          <div>社工專欄文章： </div>
+          <div>{{ socialWorkColumnCount }} 篇</div>
         </el-card>
       </el-col>
 
     </el-row>
-
 
 
     <!-- Echarts 图表 -->
@@ -148,85 +169,68 @@ defineOptions({
 
 import { useUserStore } from "@/store/modules/user";
 import { useTransition, TransitionPresets } from "@vueuse/core";
-import { getMemberCountApi, getMemberCountByStatusApi } from "@/api/member";
+import { getOrganDonationConsentCountApi, getOrganDonationConsentCountByStatusApi } from "@/api/organDonationConsent";
 
 import { getArticleCountByGroupApi, getArticleViewsCountByGroupApi } from "@/api/article"
 
 
-let memberCount = ref(0)
-let memberApprovedCount = ref(0)
-let memberPendingCount = ref(0)
-
-let educationSurgeryCount = ref(0)
-let educationSurgeryViewsCount = ref(0)
-
-let medicalKnowledgeCount = ref(0)
-let medicalKnowledgeViewsCount = ref(0)
-
-let professionalMedicalCount = ref(0)
-let professionalMedicalViewsCount = ref(0)
+let organDonationConsentCount = ref(0)
+let organDonationConsentApprovedCount = ref(0)
+let organDonationConsentPendingCount = ref(0)
 
 let newsCount = ref(0)
-let newsViewsCount = ref(0)
+let eventHighlightsCount = ref(0)
+let organDonationCount = ref(0)
+let storyDonorFamilyCount = ref(0)
+
+let storyRecipientCount = ref(0)
+let videoAreaCount = ref(0)
+let doctorVoiceCount = ref(0)
+let assistanceResourcesCount = ref(0)
+
+let bookRecommendationsCount = ref(0)
+let socialWorkColumnCount = ref(0)
 
 
 //獲取總會員人數 及 已審核、未審核人數
-const getMemberCount = async () => {
-  let res = await getMemberCountApi()
-  memberCount.value = res.data
+const getOrganDonationConsentCount = async () => {
+  let res = await getOrganDonationConsentCountApi()
+  organDonationConsentCount.value = res.data
 
-  let approvedRes = await getMemberCountByStatusApi("1")
-  memberApprovedCount.value = approvedRes.data
+  let approvedRes = await getOrganDonationConsentCountByStatusApi("1")
+  organDonationConsentApprovedCount.value = approvedRes.data
 
-  let pendingRes = await getMemberCountByStatusApi("0")
-  memberPendingCount.value = pendingRes.data
+  let pendingRes = await getOrganDonationConsentCountByStatusApi("0")
+  organDonationConsentPendingCount.value = pendingRes.data
 
 
 }
 
-//獲取手術衛教文章數 及 瀏覽數
-const getEducationSurgeryCount = async () => {
-  const GROUP = "educationSurgery"
-  let res = await getArticleCountByGroupApi(GROUP);
-  educationSurgeryCount.value = res.data
-  let viewsCountRes = await getArticleViewsCountByGroupApi(GROUP)
-  educationSurgeryViewsCount.value = viewsCountRes.data
+//獲取各類別文章數量
+const getCounteData = async () => {
+  newsCount.value = (await getArticleCountByGroupApi("news")).data
+  eventHighlightsCount.value = (await getArticleCountByGroupApi("eventHighlights")).data
+  organDonationCount.value = (await getArticleCountByGroupApi("organDonation")).data
+  storyDonorFamilyCount.value = (await getArticleCountByGroupApi("storyDonorFamily")).data
+  storyRecipientCount.value = (await getArticleCountByGroupApi("storyRecipient")).data
+  videoAreaCount.value = (await getArticleCountByGroupApi("videoArea")).data
+  doctorVoiceCount.value = (await getArticleCountByGroupApi("doctorVoice")).data
+  assistanceResourcesCount.value = (await getArticleCountByGroupApi("assistanceResources")).data
+  bookRecommendationsCount.value = (await getArticleCountByGroupApi("bookRecommendations")).data
+  socialWorkColumnCount.value = (await getArticleCountByGroupApi("socialWorkColumn")).data
+
 }
 
-//獲取醫療新知文章數 及 瀏覽數
-const getMedicalKnowledgeCount = async () => {
-  const GROUP = "medicalKnowledge"
-  let res = await getArticleCountByGroupApi(GROUP);
-  medicalKnowledgeCount.value = res.data
-  let viewsCountRes = await getArticleViewsCountByGroupApi(GROUP)
-  medicalKnowledgeViewsCount.value = viewsCountRes.data
-}
 
-//獲取專業醫療文章數 及 瀏覽數
-const getProfessionalMedicalCount = async () => {
-  const GROUP = "professionalMedical"
-  let res = await getArticleCountByGroupApi(GROUP);
-  professionalMedicalCount.value = res.data
-  let viewsCountRes = await getArticleViewsCountByGroupApi(GROUP)
-  professionalMedicalViewsCount.value = viewsCountRes.data
-}
 
-//獲取最新消息則數 及 瀏覽數
-const getNewsCount = async () => {
-  const GROUP = "news"
-  let res = await getArticleCountByGroupApi(GROUP);
-  newsCount.value = res.data
-  let viewsCountRes = await getArticleViewsCountByGroupApi(GROUP)
-  newsViewsCount.value = viewsCountRes.data
-}
 
 //掛載時獲取首頁Dashboard數據
 onMounted(() => {
-  getMemberCount()
-  getEducationSurgeryCount()
-  getMedicalKnowledgeCount()
-  getProfessionalMedicalCount()
-  getNewsCount()
+  //獲取同意書審核數量
+  getOrganDonationConsentCount()
+
+  getCounteData()
+
 })
 
 
