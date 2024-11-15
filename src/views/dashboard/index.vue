@@ -34,7 +34,7 @@
     <el-row :gutter="20" class="mt-3">
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
-          <div>文章瀏覽人次： </div>
+          <div>文章總瀏覽人次： </div>
           <div>0次</div>
         </el-card>
       </el-col>
