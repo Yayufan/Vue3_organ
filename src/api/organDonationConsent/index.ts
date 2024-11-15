@@ -145,7 +145,7 @@ export function deleteOrganDonationConsentApi(id: number): AxiosPromise {
 }
 
 /**
- * 批量刪除會員
+ * 批量刪除同意書
  * @param data 
  * @returns 
  */
@@ -156,6 +156,20 @@ export function batchDeleteOrganDonationConsentApi(data: any): AxiosPromise {
     data
   });
 }
+
+
+/**
+ * 下載同意書Excel
+ * @param data 
+ * @returns 
+ */
+export function downloadExcelOrganDonationConsentApi(): AxiosPromise {
+  return request({
+    url: `/organ-donation-consent/download-excel`,
+    method: "get",
+  });
+}
+
 
 
 

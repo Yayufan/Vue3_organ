@@ -24,6 +24,8 @@
               <Delete />
             </el-icon>
           </el-button>
+
+          <el-button @click="downloadExcel">下載Excel</el-button>
         </div>
       </div>
 
@@ -79,6 +81,7 @@
             </el-button>
             <el-button link type="danger" size="small" @click="deleteRow(scope.row.organDonationConsentId)">
               Delete</el-button>
+
           </template>
         </el-table-column>
       </el-table>
@@ -292,7 +295,17 @@ import { ref, reactive } from 'vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 
-import { getOrganDonationConsentCountApi, getOrganDonationConsentByPaginationApi, getOrganDonationConsentByPaginationByStatusApi, updateOrganDonationConsentApi, deleteOrganDonationConsentApi, batchDeleteOrganDonationConsentApi } from '@/api/organDonationConsent'
+import { getOrganDonationConsentCountApi, getOrganDonationConsentByPaginationApi, getOrganDonationConsentByPaginationByStatusApi, updateOrganDonationConsentApi, deleteOrganDonationConsentApi, batchDeleteOrganDonationConsentApi, downloadExcelOrganDonationConsentApi } from '@/api/organDonationConsent'
+
+const downloadExcel = async () => {
+  let res = await downloadExcelOrganDonationConsentApi()
+  const url = window.URL.createObjectURL(new Blob([res.data]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'example.xlsx');
+  document.body.appendChild(link);
+  link.click();
+}
 
 //獲取路由
 const route = useRoute()

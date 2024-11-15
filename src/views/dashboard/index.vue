@@ -35,7 +35,7 @@
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
           <div>文章總瀏覽人次： </div>
-          <div>0次</div>
+          <div>{{ totalViews }}次</div>
         </el-card>
       </el-col>
 
@@ -171,7 +171,11 @@ import { useUserStore } from "@/store/modules/user";
 import { useTransition, TransitionPresets } from "@vueuse/core";
 import { getOrganDonationConsentCountApi, getOrganDonationConsentCountByStatusApi } from "@/api/organDonationConsent";
 
-import { getArticleCountByGroupApi, getArticleViewsCountByGroupApi } from "@/api/article"
+import { getArticleViewsCountApi, getArticleCountByGroupApi, getArticleViewsCountByGroupApi } from "@/api/article"
+
+
+
+let totalViews = ref(0)
 
 
 let organDonationConsentCount = ref(0)
@@ -203,11 +207,11 @@ const getOrganDonationConsentCount = async () => {
   let pendingRes = await getOrganDonationConsentCountByStatusApi("0")
   organDonationConsentPendingCount.value = pendingRes.data
 
-
 }
 
-//獲取各類別文章數量
+//獲取總文章瀏覽量總數 以及 各類別文章數量
 const getCounteData = async () => {
+  totalViews.value = (await getArticleViewsCountApi()).data
   newsCount.value = (await getArticleCountByGroupApi("news")).data
   eventHighlightsCount.value = (await getArticleCountByGroupApi("eventHighlights")).data
   organDonationCount.value = (await getArticleCountByGroupApi("organDonation")).data

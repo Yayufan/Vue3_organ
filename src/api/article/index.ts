@@ -6,7 +6,7 @@ import { AxiosPromise } from "axios";
  * @param id 
  * @returns 
  */
-export function getArticleApi(id): AxiosPromise {
+export function getArticleApi(id: number): AxiosPromise {
   return request({
     url: `/article/group/${id}`,
     method: "get",
@@ -19,7 +19,7 @@ export function getArticleApi(id): AxiosPromise {
  * @param size 
  * @returns 
  */
-export function getArticleByPaginationApi(page, size): AxiosPromise {
+export function getArticleByPaginationApi(page: number, size: number): AxiosPromise {
   return request({
     url: "/article/pagination",
     method: "get",
@@ -60,7 +60,7 @@ export function getArticleCountApi(): AxiosPromise {
  * @param group 
  * @returns 
  */
-export function getAllArticleByGroupApi(group): AxiosPromise {
+export function getAllArticleByGroupApi(group: string): AxiosPromise {
   return request({
     url: `/article/${group}`,
     method: "get",
@@ -73,7 +73,7 @@ export function getAllArticleByGroupApi(group): AxiosPromise {
  * @param group 
  * @returns 
  */
-export function getAllArticleByGroupByPaginationApi(group, page, size): AxiosPromise {
+export function getAllArticleByGroupByPaginationApi(group: string, page: number, size: number): AxiosPromise {
   return request({
     url: `/article/${group}/pagination`,
     method: "get",
@@ -91,9 +91,20 @@ export function getAllArticleByGroupByPaginationApi(group, page, size): AxiosPro
  * @param group 
  * @returns 
  */
-export function getArticleCountByGroupApi(group): AxiosPromise {
+export function getArticleCountByGroupApi(group: string): AxiosPromise {
   return request({
     url: `/article/${group}/count`,
+    method: "get",
+  });
+}
+
+/**
+ * 獲取所有文章的瀏覽量總數
+ * @returns 
+ */
+export function getArticleViewsCountApi(): AxiosPromise {
+  return request({
+    url: `/article/views-count`,
     method: "get",
   });
 }
@@ -103,7 +114,7 @@ export function getArticleCountByGroupApi(group): AxiosPromise {
  * 獲取某組別所有文章瀏覽數
  * @returns 
  */
-export function getArticleViewsCountByGroupApi(group): AxiosPromise {
+export function getArticleViewsCountByGroupApi(group: string): AxiosPromise {
   return request({
     url: `/article/${group}/views-count`,
     method: "get",
@@ -116,7 +127,7 @@ export function getArticleViewsCountByGroupApi(group): AxiosPromise {
  * @param data 
  * @returns 
  */
-export function addArticleApi(data): AxiosPromise {
+export function addArticleApi(data: any): AxiosPromise {
   return request({
     url: "/article",
     method: "post",
@@ -132,7 +143,7 @@ export function addArticleApi(data): AxiosPromise {
  * @param data 
  * @returns 
  */
-export function updateArticleApi(data): AxiosPromise {
+export function updateArticleApi(data: any): AxiosPromise {
   return request({
     url: "/article",
     method: "put",
@@ -145,7 +156,7 @@ export function updateArticleApi(data): AxiosPromise {
  * @param id 
  * @returns 
  */
-export function deleteArticleApi(id): AxiosPromise {
+export function deleteArticleApi(id: number): AxiosPromise {
   return request({
     url: `/article/${id}`,
     method: "delete",
@@ -157,7 +168,7 @@ export function deleteArticleApi(id): AxiosPromise {
  * @param id 
  * @returns 
  */
-export function batchDeleteArticleApi(data): AxiosPromise {
+export function batchDeleteArticleApi(data: any): AxiosPromise {
   return request({
     url: `/article`,
     method: "delete",
