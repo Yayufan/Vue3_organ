@@ -159,7 +159,8 @@ export function batchDeleteOrganDonationConsentApi(data: any): AxiosPromise {
 
 
 /**
- * 下載同意書Excel
+ * 下載同意書Excel,這邊要注意,
+ * 這邊指定了responseType為 arraybuffer,所以他在封裝的request中會判斷他是一個二進制檔案
  * @param data 
  * @returns 
  */
@@ -167,6 +168,7 @@ export function downloadExcelOrganDonationConsentApi(): AxiosPromise {
   return request({
     url: `/organ-donation-consent/download-excel`,
     method: "get",
+    responseType: 'arraybuffer'
   });
 }
 
