@@ -13,11 +13,12 @@
         </div>
 
         <div class="btn-box">
-          <el-button type="primary" @click="toggleAddDialog">
+
+          <!-- <el-button type="primary" @click="toggleAddDialog">
             新增<el-icon class="el-icon--right">
               <Plus />
             </el-icon>
-          </el-button>
+          </el-button> -->
 
           <el-button type="danger" @click="deleteList" :disabled="deleteSelectList.length > 0 ? false : true">
             刪除<el-icon class="el-icon--right">
@@ -33,7 +34,7 @@
         <el-input v-model="input" style="width: 240px" placeholder="輸入內容,Enter查詢"
           @keydown.enter="getOrganDonationConsent(currentPage, 10)" />
 
-        <el-select v-model="filterStatus" style="width: 240px;" class="filter-status">
+        <el-select v-model="filterStatus" style="width: 240px;" class="filter-status" placeholder="請選擇">
           <el-option label="全選" value="">
             <span>全選</span>
           </el-option>
